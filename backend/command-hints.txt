@@ -1,0 +1,4 @@
+curl http://127.0.0.1:5000/status
+curl -X POST http://127.0.0.1:5000/update-game
+curl -X POST http://127.0.0.1:5000/search-and-join-game
+curl -X POST http://127.0.0.1:5000/make-move -H "Content-Type: application/json" -d '{"move": "e2e4"}’

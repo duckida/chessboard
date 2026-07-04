@@ -1,10 +1,13 @@
 import os
+import threading
 
 import berserk
-from flask import Flask
+from dotenv import load_dotenv
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
+load_dotenv()
 LICHESS_TOKEN = os.environ["LICHESS_TOKEN"]
 
 
@@ -22,19 +25,26 @@ class Game:
         self.client = berserk.Client(session=self.session)
         self.board = self.client.board
         self.playing = False
+        self.results = {"state": "idle"}
 
     def search(self, time, increment):  # time in mins, increment in seconds
-        self.board.seek(time=time, increment=increment, color="random")
+        if self.results["state"] == "found":  # already found
+            return  # leave
 
-    def update_stream(self):
+        self.results = {"state": "searching", "gameid": ""}
+        self.board.seek(time=time, increment=increment, color="random")
         for event in self.board.stream_incoming_events():
             if event["type"] == "gameStart":
                 self.join(event)
+                return
+
+    def update(self):
+        for state in self.board.stream_game_state(self.game_id):
+            self.results = {"state": "playing", "gamedata": state}
 
     def join(self, data):
-        print(data)
+        print("joined game")
         game_data = data["game"]
-        print(game_data)
         if not self.playing:  # not already in a game
             self.game_id = game_data["gameId"]
             self.playing = True
@@ -53,19 +63,57 @@ class Game:
                 opponent_color,
             )
 
+            self.results = {"state": "found", "gameid": self.game_id}
+
+    def make_move(self, move):
+        self.board.make_move(self.game_id, move)
+
+
+game = Game()
+
 
 @app.route("/")
 def index_page():
     return "<p>Smart chessboard API</p>"
 
 
+TIME = 10
+INCREMENT = 0
+
+
+@app.route("/search-and-join-game", methods=["POST"])
+def search_and_join_game():
+    search_thread = threading.Thread(
+        target=game.search, args=(TIME, INCREMENT), daemon=True
+    )
+    search_thread.start()
+    return jsonify(game.results)
+
+
+@app.route("/update-game", methods=["POST"])
+def update_game():
+    game_thread = threading.Thread(target=game.update, daemon=True)
+    game_thread.start()
+    return jsonify(game.results)
+
+
+@app.route("/make-move", methods=["POST"])
+def make_move():
+    move = request.json.get("move")
+    game.make_move(move)
+    return jsonify(game.results)
+
+
+@app.route("/status")
+def return_status():
+    return jsonify(game.results)
+
+
 def test():
     game = Game()
     game.search(10, 0)
-    game.update_stream()
-    print(game.opponent.username)
 
 
 if __name__ == "__main__":
-    test()
-    # app.run(debug=True)
+    # test()
+    app.run(debug=True)
