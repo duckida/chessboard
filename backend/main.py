@@ -66,6 +66,12 @@ class Game:
 
             self.results = {"state": "found", "gameid": self.game_id}
 
+    def reset_game(self):
+        self.playing = False
+        self.game_id = ""
+        self.opponent = None
+        self.results = {"state": "idle"}
+
     def make_move(self, move):
         self.board.make_move(self.game_id, move)
 
@@ -88,6 +94,12 @@ def search_and_join_game():
         target=game.search, args=(TIME, INCREMENT), daemon=True
     )
     search_thread.start()
+    return "success"
+
+
+@app.route("/reset-game", methods=["POST"])
+def reset_game():
+    game.reset_game()
     return "success"
 
 
@@ -114,11 +126,11 @@ def return_status():
     results = copy.deepcopy(game.results)  # to avoid changing the original pointer
     print(results)
 
-    if "gamedata" in results and results["type"] == "gamestate":
+    if "gamedata" in results and results["gamedata"]["type"] == "gameState":
         for key in ["binc", "winc", "wtime", "btime"]:
             results["gamedata"][key] = results["gamedata"][key].total_seconds()
 
-    return jsonify(game.results)
+    return jsonify(results)
 
 
 def test():
