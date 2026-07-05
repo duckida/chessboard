@@ -1,3 +1,4 @@
+import copy
 import os
 import threading
 
@@ -87,25 +88,36 @@ def search_and_join_game():
         target=game.search, args=(TIME, INCREMENT), daemon=True
     )
     search_thread.start()
-    return jsonify(game.results)
+    return "success"
 
 
 @app.route("/update-game", methods=["POST"])
 def update_game():
     game_thread = threading.Thread(target=game.update, daemon=True)
     game_thread.start()
-    return jsonify(game.results)
+    return "success"
 
 
 @app.route("/make-move", methods=["POST"])
 def make_move():
     move = request.json.get("move")
-    game.make_move(move)
-    return jsonify(game.results)
+
+    try:
+        game.make_move(move)
+        return "success"
+    except Exception as e:
+        return f"error {e}"
 
 
 @app.route("/status")
 def return_status():
+    results = copy.deepcopy(game.results)  # to avoid changing the original pointer
+    print(results)
+
+    if "gamedata" in results and results["type"] == "gamestate":
+        for key in ["binc", "winc", "wtime", "btime"]:
+            results["gamedata"][key] = results["gamedata"][key].total_seconds()
+
     return jsonify(game.results)
 
 
