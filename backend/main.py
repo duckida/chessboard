@@ -5,8 +5,10 @@ import threading
 import berserk
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 load_dotenv()
 LICHESS_TOKEN = os.environ["LICHESS_TOKEN"]
