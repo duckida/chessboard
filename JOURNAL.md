@@ -1,3 +1,5 @@
+# chessboard journal
+
 June 23: Spent 20mins creating a project brief and bill of materials
 
 June 27: Spend 45mins writing a Python program to use `berserk` API to connect to LiChess and learn about the streamed events
@@ -9,6 +11,8 @@ July 4: ordered parts on Amazon, used threading to make a basic Flask API to sea
 July 5: got a basic API working and was able to move pieces against another player with it! Learned the basics of Next.js and started making the frontend
 
 July 6: got basic interaction between the frontend & backend working!
+
+July 7: parts arrived! got a basic code with reed switches to work. Designed a prototype for 4 chessboard squares in TinkerCAD.
 
 ### AI usage
 I used AI to help me understand the LiChess API responses, choose some parts, and with learning Next.js / Node.
