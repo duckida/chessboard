@@ -20,6 +20,9 @@ Next, I tested my NeoPixels, and I need to find a way to diffuse them better.
 This design wasn't as good for the reed switch height, so I did another one which was less tall and thinner surface, and tested with 2 squares.
 ![Improved design](journal_images/2.png)
 
+This also lights up better, and fits the reed switch!
+![Printed improved design](journal_images/3.png)
+
 
 ### AI usage
 I used AI to help me understand the LiChess API responses, choose some parts, and with learning Next.js / Node.
