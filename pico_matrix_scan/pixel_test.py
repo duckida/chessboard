@@ -1,9 +1,11 @@
+from time import sleep
+
 import neopixel
 from machine import Pin
 
 STRIP_LENGTH = 4
 STRIP_PIN = 16
-BRIGHTNESS = 0.2
+BRIGHTNESS = 1
 strip = neoRing = neopixel.NeoPixel(Pin(STRIP_PIN), STRIP_LENGTH)
 
 
@@ -16,12 +18,12 @@ def set_brightness(color):
 
 
 while True:
-    white_color = set_brightness((0, 255, 0))
+    white_color = set_brightness((255, 255, 255))
     strip[0] = strip[2] = white_color
 
-    black_color = set_brightness((0, 0, 255))
+    black_color = set_brightness((0, 0, 0))
     strip[1] = strip[3] = black_color
 
     strip.write()
 
-    time.sleep_ms(200)
+    sleep(0.2)
