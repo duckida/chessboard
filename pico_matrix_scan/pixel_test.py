@@ -21,11 +21,11 @@ while True:
     white_color = set_brightness((255, 255, 255))
     strip[0] = strip[2] = white_color
 
-    black_color = set_brightness((139, 69, 19))
+    #black_color = set_brightness((139, 69, 19))
+    #
+    black_color = (0,0,0)
 
     strip[1] = strip[3] = black_color
-
-    strip[2] = strip[3] = (0, 0, 0)
 
     strip.write()
 
