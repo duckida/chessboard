@@ -41,7 +41,10 @@ July 8:
 ![Matrix schematic](journal_images/4.png)
 
 - Soldered the reed switches in a matrix layout
+- Got the 2x2 mini board to work!
+- Wrote a custom matrix keypad library based on an existing one to output an array which i can use
 
+![Working 2x2 mini board](journal_images/5.png)
 
 ### AI usage
 I used AI to help me understand the LiChess API responses, choose some parts, and with learning Next.js / Node.
