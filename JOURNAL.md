@@ -26,6 +26,9 @@ This also lights up better, and fits the reed switch!
 
 ![Printed improved design](journal_images/3.png)
 
+July 8: 3D printed a 4-square version of the new design. Drew up a KiCad schematic of the matrix layout!
+
+![Matrix schematic](journal_images/4.png)
 
 ### AI usage
 I used AI to help me understand the LiChess API responses, choose some parts, and with learning Next.js / Node.

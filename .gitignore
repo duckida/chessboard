@@ -1,3 +1,6 @@
+# KiCAD backups
+pico_matrix_scan/pico_matrix_scan-backups/
+
 # Python-generated files
 __pycache__/
 *.py[oc]
