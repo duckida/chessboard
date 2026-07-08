@@ -1,5 +1,4 @@
 # Reads and prints keypad keys
-# Using library https://github.com/PerfecXX/MicroPython-SimpleKeypad
 
 from time import sleep
 from keypad_lib import Keypad
