@@ -60,11 +60,10 @@ function LiChessboard() {
 export default function Page() {
   return (
     <>
-      <div style={{ width: "50vw" }}>
-        <Button variant="outline" onClick={() => searchGame()}>
+        <Button onClick={() => searchGame()}>
           Search Game
         </Button>
-        <Button variant="outline" onClick={() => startGame()}>
+        <Button onClick={() => startGame()}>
           Start Game (once found)
         </Button>
         <Button variant="outline" onClick={() => resetGame()}>
@@ -72,7 +71,6 @@ export default function Page() {
         </Button>
         <StatusText />
         <LiChessboard />
-      </div>
     </>
   );
 }
