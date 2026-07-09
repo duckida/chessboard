@@ -1,3 +1,6 @@
+# matrix demo
+# turns the LED of a square green if there's a piece on it
+
 from time import sleep
 from keypad_lib import Keypad
 from machine import Pin

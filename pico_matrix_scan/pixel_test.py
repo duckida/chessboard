@@ -1,3 +1,5 @@
+# tests neopixels
+
 from time import sleep
 
 import neopixel
