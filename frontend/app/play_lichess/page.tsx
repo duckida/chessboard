@@ -24,6 +24,7 @@ function resetGame() {
   axios.post(`${BASE_URL}/reset-game`).catch((error) => {
     console.error(error);
   });
+  window.location.reload();
 }
 
 // custom ui components
@@ -44,15 +45,32 @@ function StatusText() {
 }
 
 function LiChessboard() {
-  const chessboardOptions = {
-    // your config options here
-  };
-
   const chessGameRef = useRef(new Chess());
   const chessGame = chessGameRef.current;
-  const possibleMoves = chessGame.moves();
 
-  console.log(possibleMoves);
+  const [gameFen, setGameFen] = useState(chessGame.fen());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      axios.get(`${BASE_URL}/status`).then(function (response) {
+        const status = response.data
+        if (status.gamedata && status.gamedata.type == "gameState") {
+          const splitMoves = status.gamedata.moves.split(" ")
+          const mostRecentMove = splitMoves[splitMoves.length - 1]
+
+          chessGame.move(mostRecentMove);
+          setGameFen(chessGame.fen());
+        }
+      });
+    }, 1000); // check every 1000 ms
+
+    return () => clearInterval(intervalId);
+  }, [chessGame]);
+
+  const chessboardOptions = {
+    position: gameFen,
+    id: "lichess-board",
+  };
 
   return <Chessboard options={chessboardOptions} />;
 }
