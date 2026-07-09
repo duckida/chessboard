@@ -46,5 +46,7 @@ July 8:
 
 ![Working 2x2 mini board](journal_images/5.png)
 
+July 9 - Created a home page with Next.js (learned about Tailwind CSS and shadcn/ui)
+
 ### AI usage
 I used AI to help me understand the LiChess API responses, choose some parts, and with learning Next.js / Node.
