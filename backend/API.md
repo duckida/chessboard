@@ -18,3 +18,5 @@
 `curl -X POST http://127.0.0.1:5000/reset-game`
 
 ## Stockfish
+### Analyze a given FEN and return the best move:
+`curl -X POST http://chessboard.local:5000/sf-analyze-fen -H "Content-Type: application/json" -d '{"fen": "rnbqkbnr/pppp1ppp/4p3/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"}'`
