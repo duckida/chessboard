@@ -80,7 +80,8 @@ class Game:
 
 
 # Stockfish routes
-stockfish = Stockfish(path="/home/pi/stockfish/src/stockfish", parameters={"EvalFile": "nn-37f18f62d772.nnue", "Hash": 1}) # minimize hash table and use smaller stockfish
+stockfish = Stockfish(path="/home/pi/stockfish/src/stockfish", parameters={"Hash": 1}) # minimize hash table
+stockfish._put("setoption name EvalFile value nn-37f18f62d772.nnue") # tell it to use the smaller model
 
 @app.route("/sf-analyze-fen", methods=["POST"])
 def sf_make_move():
