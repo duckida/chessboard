@@ -53,7 +53,7 @@ July 10:
 - Soldered pins to my Raspberry Pi (decided to use a Zero 2W as it's smaller)
 - Flashed the SD card for the Pi and configured the OS
 - Compiled Stockfish on the Pi
-
+- Got Stockfish best move analysis to show on the frontend!
 
 ### AI usage
 I used AI to help me understand the LiChess API responses, choose some parts, and with learning Next.js / Node.
