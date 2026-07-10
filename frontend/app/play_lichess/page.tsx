@@ -59,7 +59,7 @@ function LiChessboard() {
           const splitMoves = status.gamedata.moves.split(" ")
           const mostRecentMove = splitMoves[splitMoves.length - 1]
 
-          if (lastMoveRef != mostRecentMove.current) { // not the same / repeat move
+          if (lastMoveRef.current != mostRecentMove) { // not the same / repeat move
             chessGame.move(mostRecentMove);
             setGameFen(chessGame.fen());
             lastMoveRef.current = mostRecentMove;
