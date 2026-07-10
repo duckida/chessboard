@@ -6,6 +6,7 @@ import berserk
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from stockfish import Stockfish
 
 app = Flask(__name__)
 CORS(app)
@@ -78,17 +79,20 @@ class Game:
         self.board.make_move(self.game_id, move)
 
 
+# Stockfish routes
+stockfish = Stockfish(path="/home/pi/stockfish/src/stockfish")
+
+@app.route("/sf-analyze-fen", methods=["POST"])
+def sf_make_move():
+    fen = request.json.get("fen")
+    stockfish.set_fen_position(fen)
+    return stockfish.get_best_move()
+
+
+# LiChess routes
 game = Game()
-
-
-@app.route("/")
-def index_page():
-    return "<p>Smart chessboard API</p>"
-
-
 TIME = 10
 INCREMENT = 0
-
 
 @app.route("/search-and-join-game", methods=["POST"])
 def search_and_join_game():

@@ -1,5 +1,8 @@
-### Get the current status of the game
-`curl http://127.0.0.1:5000/status`
+# API reference
+
+## LiChess
+### Get the current status of the LiChess game
+`curl http://127.0.0.1:5000/lichess-status`
 
 ### Start searching for a game 
 `curl -X POST http://127.0.0.1:5000/search-and-join-game`
@@ -13,3 +16,5 @@
 
 ### Reset game state (if aborted etc.)
 `curl -X POST http://127.0.0.1:5000/reset-game`
+
+## Stockfish
