@@ -49,6 +49,7 @@ function LiChessboard() {
   const chessGame = chessGameRef.current;
 
   const [gameFen, setGameFen] = useState(chessGame.fen());
+  const lastMoveRef = useRef("");
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -58,11 +59,14 @@ function LiChessboard() {
           const splitMoves = status.gamedata.moves.split(" ")
           const mostRecentMove = splitMoves[splitMoves.length - 1]
 
-          chessGame.move(mostRecentMove);
-          setGameFen(chessGame.fen());
+          if (lastMoveRef != mostRecentMove.current) { // not the same / repeat move
+            chessGame.move(mostRecentMove);
+            setGameFen(chessGame.fen());
+            lastMoveRef.current = mostRecentMove;
+          }
         }
       });
-    }, 1000); // check every 1000 ms
+    }, 500); // check every 500 ms
 
     return () => clearInterval(intervalId);
   }, [chessGame]);
