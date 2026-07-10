@@ -34,7 +34,7 @@ function StatusText() {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      axios.get(`${BASE_URL}/status`).then(function (response) {
+      axios.get(`${BASE_URL}/lichess-status`).then(function (response) {
         setStatus(JSON.stringify(response.data));
       });
     }, 1000); // check every 1000 ms

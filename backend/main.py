@@ -123,7 +123,7 @@ def make_move():
         return f"error {e}"
 
 
-@app.route("/status")
+@app.route("/lichess-status")
 def return_status():
     results = copy.deepcopy(game.results)  # to avoid changing the original pointer
     print(results)
@@ -141,5 +141,4 @@ def test():
 
 
 if __name__ == "__main__":
-    # test()
     app.run(debug=True, host="0.0.0.0", port=5000)
