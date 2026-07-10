@@ -48,5 +48,10 @@ July 8:
 
 July 9 - Created a home page with Next.js (learned about Tailwind CSS and shadcn/ui)
 
+July 10:
+- Fixed a duplicate move issue in the frontend
+- Soldered pins to my Raspberry Pi (decided to use a Zero 2W as it's smaller)
+- Flashed the SD card for the Pi and configured the OS
+
 ### AI usage
 I used AI to help me understand the LiChess API responses, choose some parts, and with learning Next.js / Node.
