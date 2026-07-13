@@ -6,9 +6,9 @@ import axios, { AxiosHeaders } from "axios";
 import { Button } from "@/components/ui/button";
 
 // backend calling functions
-const BASE_URL = "http://chessboard.local:5000";
+const BASE_URL = "http://127.0.0.1:5000";
 
-function StockfishChessboard() {
+function HintChessboard() {
   const chessGameRef = useRef(new Chess());
   const chessGame = chessGameRef.current;
 
@@ -34,7 +34,7 @@ function StockfishChessboard() {
           color: 'rgb(0, 128, 0)'
         }] : undefined,
         position: gameFen,
-        id: 'stockfish-board'
+        id: 'hint-board'
       };
 
   return <Chessboard options={chessboardOptions} />;
@@ -43,7 +43,7 @@ function StockfishChessboard() {
 export default function Page() {
   return (
     <>
-        <StockfishChessboard />
+        <HintChessboard />
     </>
   );
 }
