@@ -6,7 +6,7 @@ import berserk
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from stockfish import Stockfish
+import chess.engine
 
 app = Flask(__name__)
 CORS(app)
@@ -80,14 +80,20 @@ class LichessGame:
 
 
 # Stockfish routes
-stockfish = Stockfish(path="../stockfish", parameters={"Hash": 1}) # minimize hash table
-stockfish._put("setoption name EvalFile value nn-37f18f62d772.nnue") # tell it to use the smaller model
+stockfish = chess.engine.SimpleEngine.popen_uci("../stockfish")
+stockfish.configure({
+    "Hash": 4,          # Use 4MB of hash table
+    "Threads": 1,        # Use only 1 CPU thread
+})
 
 @app.route("/sf-analyze-fen", methods=["POST"])
 def sf_make_move():
     fen = request.json.get("fen")
-    stockfish.set_fen_position(fen)
-    return stockfish.get_best_move()
+    board = chess.Board(fen)
+    limit = chess.engine.Limit(time=0.5)
+    move = stockfish.play(board, limit).move
+
+    return str(move)
 
 
 # LiChess routes
