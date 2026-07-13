@@ -78,6 +78,21 @@ class LichessGame:
     def make_move(self, move):
         self.board.make_move(self.game_id, move)
 
+class StockfishGame:
+    limit = chess.engine.Limit(time=0.5)
+    def __init__(self):
+        self.board = chess.Board()
+
+    def make_stockfish_move(self):
+        result = stockfish.play(self.board, self.limit)
+        self.board.push(result)
+
+    def make_human_move(self, move):
+        move_object = chess.Move.from_uci(move)
+        self.board.push(move_object)
+
+    def get_fen(self):
+        return self.board.fen()
 
 # Stockfish routes
 stockfish = chess.engine.SimpleEngine.popen_uci("../stockfish")
@@ -86,8 +101,9 @@ stockfish.configure({
     "Threads": 1,        # Use only 1 CPU thread
 })
 
+# this is for playing against human, suggesting next best move
 @app.route("/sf-analyze-fen", methods=["POST"])
-def sf_make_move():
+def sf_analyze_fen():
     fen = request.json.get("fen")
     board = chess.Board(fen)
     limit = chess.engine.Limit(time=0.5)
@@ -95,6 +111,17 @@ def sf_make_move():
 
     return str(move)
 
+# these are for playing against stockfish
+stockfishGame = StockfishGame()
+
+@app.route("/sf-play", methods=["POST"])
+def sf_play():
+    stockfishGame.make_stockfish_move()
+
+@app.route("/sf-make-human-move", methods=["POST"])
+def sf_make_human_move():
+    move = request.json.get("move")
+    stockfishGame.make_human_move(move)
 
 # LiChess routes
 game = LichessGame()
@@ -124,7 +151,7 @@ def update_game():
 
 
 @app.route("/make-move", methods=["POST"])
-def make_move():
+def li_make_human_move():
     move = request.json.get("move")
 
     try:
@@ -144,11 +171,6 @@ def return_status():
             results["gamedata"][key] = results["gamedata"][key].total_seconds()
 
     return jsonify(results)
-
-
-def test():
-    game = Game()
-    game.search(10, 0)
 
 
 if __name__ == "__main__":
