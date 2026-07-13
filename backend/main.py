@@ -23,7 +23,7 @@ class Opponent:
         self.color = color
 
 
-class Game:
+class LichessGame:
     def __init__(self):
         self.session = berserk.TokenSession(LICHESS_TOKEN)
         self.client = berserk.Client(session=self.session)
@@ -80,7 +80,7 @@ class Game:
 
 
 # Stockfish routes
-stockfish = Stockfish(path="/home/pi/stockfish/src/stockfish", parameters={"Hash": 1}) # minimize hash table
+stockfish = Stockfish(path="../stockfish", parameters={"Hash": 1}) # minimize hash table
 stockfish._put("setoption name EvalFile value nn-37f18f62d772.nnue") # tell it to use the smaller model
 
 @app.route("/sf-analyze-fen", methods=["POST"])
@@ -91,7 +91,7 @@ def sf_make_move():
 
 
 # LiChess routes
-game = Game()
+game = LichessGame()
 TIME = 10
 INCREMENT = 0
 
