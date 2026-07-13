@@ -1,6 +1,9 @@
 # KiCAD backups
 pico_matrix_scan/pico_matrix_scan-backups/
 
+# Stockfish binary (on Mac)
+stockfish
+
 # Python-generated files
 __pycache__/
 *.py[oc]

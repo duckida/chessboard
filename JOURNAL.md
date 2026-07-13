@@ -55,5 +55,12 @@ July 10:
 - Compiled Stockfish on the Pi
 - Got Stockfish best move analysis to show on the frontend!
 
+July 12: Set up the Pi touchscreen & X11
+
+July 13:
+- Designed a full-size chessboard in TinkerCAD and added a section for the Pi, screen & Pico (had to split it into multiple pieces to print)
+
+
 ### AI usage
 I used AI to help me understand the LiChess API responses, choose some parts, and with learning Next.js / Node.
+AI helped me run bash commands to setup the x server and display on the Pi.
