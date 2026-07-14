@@ -110,12 +110,16 @@ def sf_analyze_fen():
 
     return str(move)
 
-# Against Stockfish routes
+# Stockfish routes
 stockfishGame = StockfishGame()
 
 @app.route("/sf-play", methods=["POST"])
 def sf_play():
-    stockfishGame.make_stockfish_move()
+    try:
+        stockfishGame.make_stockfish_move()
+        return "200"
+    except Exception as e:
+        return str(e)
 
 @app.route("/sf-make-human-move", methods=["POST"])
 def sf_make_human_move():
