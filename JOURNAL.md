@@ -59,6 +59,8 @@ July 12: Set up the Pi touchscreen & X11
 
 July 13:
 - Designed a full-size chessboard in TinkerCAD and added a section for the Pi, screen & Pico (had to split it into multiple pieces to print)
+- Printed the end section which stores the Pi, Pico and screen
+- Worked on the backend, creating a class for Stockfish game and API routes for it
 
 
 ### AI usage
