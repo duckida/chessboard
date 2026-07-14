@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 // backend calling functions
 const BASE_URL = "http://127.0.0.1:5000";
 
-function HintChessboard() {
+function HVHChessboard() {
   const chessGameRef = useRef(new Chess());
   const chessGame = chessGameRef.current;
 
@@ -17,15 +17,22 @@ function HintChessboard() {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      axios.post(`${BASE_URL}/sf-find-best-move`, {'fen': gameFen})
+      // Set the game FEN
+      axios.get(`${BASE_URL}/hvh-status`)
+        .then(function (response) {
+          setGameFen(response.data);
+        });
+
+      // Get & display the best move
+      axios.post(`${BASE_URL}/hvh-find-best-move`)
         .then(function (response) {
           setBestMove(response.data)
-          setGameFen(chessGame.fen());
-      });
-    }, 3000); // check every 1000 ms
+        });
+
+    }, 1000); // check every 1000 ms
 
     return () => clearInterval(intervalId);
-  }, [chessGame]);
+  }, [gameFen]);
 
   const chessboardOptions = {
         arrows: bestMove ? [{
@@ -34,7 +41,7 @@ function HintChessboard() {
           color: 'rgb(0, 128, 0)'
         }] : undefined,
         position: gameFen,
-        id: 'hint-board'
+        id: 'hvh-board'
       };
 
   return <Chessboard options={chessboardOptions} />;
@@ -43,7 +50,7 @@ function HintChessboard() {
 export default function Page() {
   return (
     <>
-        <HintChessboard />
+        <HVHChessboard />
     </>
   );
 }
