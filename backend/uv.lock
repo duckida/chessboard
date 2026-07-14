@@ -2,6 +2,12 @@ version = 1
 revision = 3
 requires-python = ">=3.14"
 
+[manifest]
+overrides = [
+    { name = "rpi-ws281x", marker = "sys_platform != 'linux'", git = "https://github.com/HarmvZ/rpi_ws281x_mock.git" },
+    { name = "rpi-ws281x", marker = "sys_platform == 'linux'", specifier = "==5.0.0" },
+]
+
 [[package]]
 name = "berserk"
 version = "0.14.0"
