@@ -22,3 +22,7 @@
 `curl -X POST http://chessboard.local:5000/sf-find-best-move -H "Content-Type: application/json" -d '{"fen": "rnbqkbnr/pppp1ppp/4p3/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"}'`
 
 ## Stockfish (play against AI)
+### Make a move
+`curl -X POST http://127.0.0.1:5000/sf-make-human-move -H "Content-Type: application/json" -d '{"move": "e7e6"}'`
+### Tell Stockfish to make a move
+`curl -X POST http://127.0.0.1:5000/sf-play`
