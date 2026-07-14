@@ -16,9 +16,9 @@ function StockfishChessboard() {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      axios.post(`${BASE_URL}/sf-analyze-fen`, {'fen': gameFen})
+      axios.get(`${BASE_URL}/stockfish-status`)
         .then(function (response) {
-          setGameFen(chessGame.fen());
+          setGameFen(response.data);
       });
     }, 3000); // check every 1000 ms
 
