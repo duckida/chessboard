@@ -68,7 +68,8 @@ July 14:
 - Tested the NeoPixel strip with the Pi
 - Lots of debugging to get the screen to work (messed up pins, framebuffers, and bridging!)
 - Software work - added human vs human game routes to the API and integrated them into the frontend
-
+- Compiled the Next.js app
+- Designed a KiCAD schematic for the full size matrix
 
 ### AI usage
 AI helped me with:
@@ -76,3 +77,4 @@ AI helped me with:
 - choosing parts to order (comparing datasheets)
 - learning Next.js
 - help me setup the Pi desktop and framebuffer
+- Exporting the Next.js site as static HTML
