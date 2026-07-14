@@ -8,7 +8,8 @@ const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'})
 const lineSeed = LINE_Seed_JP({
   variable: "--font-line-sans",
   subsets: ["latin"],
-  weight: "400"
+  weight: "400",
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
