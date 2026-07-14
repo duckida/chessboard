@@ -131,7 +131,7 @@ def hvh_best_move():
     move = hvh_game.find_best_move()
     return str(move)
 
-@app.route("/hvh-make-move", methods=["POST"]):
+@app.route("/hvh-make-move", methods=["POST"])
 def hvh_make_move():
     move = request.json.get("move")
     try:
