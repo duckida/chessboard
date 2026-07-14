@@ -1,0 +1,15 @@
+from rpi_ws281x import PixelStrip, Color
+import time
+
+LED_COUNT = 8       # Number of LEDs
+LED_GPIO = 19
+LED_FREQ = 800000
+LED_DMA = 5
+LED_INVERT = True       # Invert required when using inverting buffer
+LED_BRIGHTNESS = 255
+
+strip = PixelStrip(LED_COUNT, LED_GPIO, LED_FREQ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, channel=1)
+strip.begin()
+
+for i in range(strip.numPixels()):
+    strip.setPixelColor(i, Color(255, 0, 0))
