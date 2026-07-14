@@ -17,7 +17,7 @@ function HintChessboard() {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      axios.post(`${BASE_URL}/sf-analyze-fen`, {'fen': gameFen})
+      axios.post(`${BASE_URL}/sf-find-best-move`, {'fen': gameFen})
         .then(function (response) {
           setBestMove(response.data)
           setGameFen(chessGame.fen());

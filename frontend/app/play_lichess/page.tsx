@@ -9,19 +9,19 @@ import { Button } from "@/components/ui/button";
 const BASE_URL = "http://127.0.0.1:5000";
 
 function searchGame() {
-  axios.post(`${BASE_URL}/search-and-join-game`).catch((error) => {
+  axios.post(`${BASE_URL}/search-and-join-lichess-game`).catch((error) => {
     console.error(error);
   });
 }
 
 function startGame() {
-  axios.post(`${BASE_URL}/update-game`).catch((error) => {
+  axios.post(`${BASE_URL}/update-lichess-game`).catch((error) => {
     console.error(error);
   });
 }
 
 function resetGame() {
-  axios.post(`${BASE_URL}/reset-game`).catch((error) => {
+  axios.post(`${BASE_URL}/reset-lichess-game`).catch((error) => {
     console.error(error);
   });
   window.location.reload();
@@ -53,7 +53,7 @@ function LiChessboard() {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      axios.get(`${BASE_URL}/status`).then(function (response) {
+      axios.get(`${BASE_URL}/lichess-status`).then(function (response) {
         const status = response.data
         if (status.gamedata && status.gamedata.type == "gameState") {
           const splitMoves = status.gamedata.moves.split(" ")
