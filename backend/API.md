@@ -26,3 +26,7 @@
 `curl -X POST http://127.0.0.1:5000/sf-make-human-move -H "Content-Type: application/json" -d '{"move": "e7e6"}'`
 ### Tell Stockfish to make a move
 `curl -X POST http://127.0.0.1:5000/sf-play`
+### Get game FEN
+`curl http://127.0.0.1:5000/stockfish-status`
+### Reset game state
+`curl -X POST http://127.0.0.1:5000/reset-stockfish-game`
