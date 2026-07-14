@@ -127,7 +127,6 @@ hvh_game = HumanGame()
 
 @app.route("/hvh-find-best-move", methods=["POST"])
 def hvh_best_move():
-    fen = request.json.get("fen")
     move = hvh_game.find_best_move()
     return str(move)
 
