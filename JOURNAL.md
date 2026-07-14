@@ -62,7 +62,17 @@ July 13:
 - Printed the end section which stores the Pi, Pico and screen
 - Worked on the backend, creating a class for Stockfish game and API routes for it
 
+July 14:
+- Printed the chessboard squares
+- Soldered the display pins (messed this up so had to redo it) and NeoPixel strip to the Pi
+- Tested the NeoPixel strip with the Pi
+- Lots of debugging to get the screen to work (messed up pins, framebuffers, and bridging!)
+- Software work - added human vs human game routes to the API and integrated them into the frontend
+
 
 ### AI usage
-I used AI to help me understand the LiChess API responses, choose some parts, and with learning Next.js / Node.
-AI helped me run bash commands to setup the x server and display on the Pi.
+AI helped me with:
+- understanding the LiChess API and its responses
+- choosing parts to order (comparing datasheets)
+- learning Next.js
+- help me setup the Pi desktop and framebuffer
