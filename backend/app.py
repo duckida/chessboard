@@ -47,9 +47,9 @@ class LichessGame:
             self.results = {"state": "playing", "gamedata": state}
 
     def join(self, data):
-        print("joined game")
+        print("joined lichess game")
         game_data = data["game"]
-        if not self.playing:  # not already in a game
+        if not self.playing:  # not already in a lichessGame
             self.game_id = game_data["gameId"]
             self.playing = True
             self.color = game_data["color"]
@@ -67,7 +67,7 @@ class LichessGame:
                 opponent_color,
             )
 
-            self.results = {"state": "found", "gameid": self.game_id}
+            self.results = {"state": "found", "lichessGameid": self.game_id}
 
     def reset_game(self):
         self.playing = False
@@ -94,15 +94,14 @@ class StockfishGame:
     def get_fen(self):
         return self.board.fen()
 
-# Stockfish routes
+# Stockfish hint (human vs human) routes
 stockfish = chess.engine.SimpleEngine.popen_uci("../stockfish")
 stockfish.configure({
     "Hash": 4,          # Use 4MB of hash table
     "Threads": 1,        # Use only 1 CPU thread
 })
 
-# this is for playing against human, suggesting next best move
-@app.route("/sf-analyze-fen", methods=["POST"])
+@app.route("/sf-find-best-move", methods=["POST"])
 def sf_analyze_fen():
     fen = request.json.get("fen")
     board = chess.Board(fen)
@@ -111,7 +110,7 @@ def sf_analyze_fen():
 
     return str(move)
 
-# these are for playing against stockfish
+# Against Stockfish routes
 stockfishGame = StockfishGame()
 
 @app.route("/sf-play", methods=["POST"])
@@ -121,41 +120,54 @@ def sf_play():
 @app.route("/sf-make-human-move", methods=["POST"])
 def sf_make_human_move():
     move = request.json.get("move")
-    stockfishGame.make_human_move(move)
+    try:
+        stockfishGame.make_human_move(move)
+        return "200"
+    except Exception as e:
+        return str(e)
+
+@app.route("/stockfish-status") # returns FEN of current stockfish lichessGame board
+def stockfish_status():
+    return stockfishGame.board.fen()
+
+@app.route("/reset-stockfish-game", methods=["POST"])
+def reset_stockfish_game():
+    stockfishGame = StockfishGame()
+    return "200"
 
 # LiChess routes
-game = LichessGame()
+lichessGame = LichessGame()
 TIME = 10
 INCREMENT = 0
 
-@app.route("/search-and-join-game", methods=["POST"])
-def search_and_join_game():
+@app.route("/search-and-join-lichess-lichessGame", methods=["POST"])
+def search_and_join_lichess_lichessGame():
     search_thread = threading.Thread(
-        target=game.search, args=(TIME, INCREMENT), daemon=True
+        target=lichessGame.search, args=(TIME, INCREMENT), daemon=True
     )
     search_thread.start()
     return "success"
 
 
-@app.route("/reset-game", methods=["POST"])
-def reset_game():
-    game.reset_game()
+@app.route("/reset-lichess-lichessGame", methods=["POST"])
+def reset_lichess_lichessGame():
+    lichessGame.reset_lichessGame()
     return "success"
 
 
-@app.route("/update-game", methods=["POST"])
-def update_game():
-    game_thread = threading.Thread(target=game.update, daemon=True)
-    game_thread.start()
+@app.route("/update-lichess-lichessGame", methods=["POST"])
+def update_lichess_lichessGame():
+    lichessGame_thread = threading.Thread(target=lichessGame.update, daemon=True)
+    lichessGame_thread.start()
     return "success"
 
 
-@app.route("/make-move", methods=["POST"])
+@app.route("/li-make-move", methods=["POST"])
 def li_make_human_move():
     move = request.json.get("move")
 
     try:
-        game.make_move(move)
+        lichessGame.make_move(move)
         return "success"
     except Exception as e:
         return f"error {e}"
@@ -163,12 +175,12 @@ def li_make_human_move():
 
 @app.route("/lichess-status")
 def return_status():
-    results = copy.deepcopy(game.results)  # to avoid changing the original pointer
+    results = copy.deepcopy(lichessGame.results)  # to avoid changing the original pointer
     print(results)
 
-    if "gamedata" in results and results["gamedata"]["type"] == "gameState":
+    if "lichessGamedata" in results and results["lichessGamedata"]["type"] == "lichessGameState":
         for key in ["binc", "winc", "wtime", "btime"]:
-            results["gamedata"][key] = results["gamedata"][key].total_seconds()
+            results["lichessGamedata"][key] = results["lichessGamedata"][key].total_seconds()
 
     return jsonify(results)
 
