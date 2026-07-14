@@ -10,4 +10,5 @@ dependencies = [
     "flask-cors>=6.0.5",
     "python-chess>=1.999",
     "python-dotenv>=1.2.2",
+    "rpi-ws281x",
 ]
