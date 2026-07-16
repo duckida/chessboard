@@ -71,6 +71,18 @@ July 14:
 - Compiled the Next.js app
 - Designed a KiCAD schematic for the full size matrix
 
+July 15:
+- Used a guillotine to cut the protoboards to size
+- Soldered the reed switches to the protoboard
+- Soldered wires for the matrix columns
+
+July 16:
+- Soldered all diodes to the matrix
+- Soldered row wires
+- Added the Pico pinout of rows & columns to my KiCAD schematic
+- Soldered the column & rows to the Pico 
+- Tested the matrix, many squares didn't work so I had to resolder loose wires etc.
+
 ### AI usage
 AI helped me with:
 - understanding the LiChess API and its responses
