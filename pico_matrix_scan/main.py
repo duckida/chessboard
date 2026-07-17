@@ -13,4 +13,4 @@ keypad = Keypad(ROW_GPIO_LIST, COL_GPIO_LIST)
 while True:
     key_list = keypad.read_keypad()
     print(key_list)
-    sleep(0.1)  # debounce and delay
+    sleep(0.02)  # debounce and delay
