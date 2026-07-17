@@ -13,8 +13,3 @@ dependencies = [
     "rpi-ws281x==5.0.0; sys_platform == 'linux'",
     "rpi-ws281x @ git+https://github.com/HarmvZ/rpi_ws281x_mock.git; sys_platform != 'linux'"
 ]
-[tool.uv.sources]
-rpi-ws281x = [
-    { version = "==5.0.0", marker = "sys_platform == 'linux'" },
-    { git = "https://github.com/HarmvZ/rpi_ws281x_mock.git", marker = "sys_platform != 'linux'" },
-]
