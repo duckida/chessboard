@@ -1,7 +1,7 @@
 [project]
 name = "chessboard"
 version = "0.1.0"
-description = "Add your description here"
+description = "Electronic chessboard"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
@@ -11,5 +11,5 @@ dependencies = [
     "python-chess>=1.999",
     "python-dotenv>=1.2.2",
     "rpi-ws281x==5.0.0; sys_platform == 'linux'",
-    "rpi-ws281x @ git+https://github.com/HarmvZ/rpi_ws281x_mock.git; sys_platform != 'linux'"
+    "rpi-ws281x-mock @ git+https://github.com/HarmvZ/rpi_ws281x_mock.git; sys_platform != 'linux'"
 ]
