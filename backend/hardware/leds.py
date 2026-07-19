@@ -25,15 +25,15 @@ class LEDStrip:
 
     def set_square_rgb(self, square, rgb):
         pixel_num = self.PIXEL_SQUARE_MAPPING[square]
-        self.strip.setPixelColor(pixel_num, Color(rgb))
+        self.strip.setPixelColor(pixel_num, Color(*rgb))
 
     def set_all_rgb(self, rgb):
         for pixel in range(self.LED_COUNT):
-            self.strip.setPixelColor(pixel, Color(rgb))
+            self.strip.setPixelColor(pixel, Color(*rgb))
 
     def set_matrix_rgb(self, rgb):
         for pixel in range(0, self.LED_COUNT, 2):
-            self.strip.setPixelColor(pixel, Color(rgb))
+            self.strip.setPixelColor(pixel, Color(*rgb))
 
     def update(self):
         self.strip.show()
