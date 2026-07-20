@@ -9,4 +9,6 @@ Details about API routes can be found in [API.md](https://github.com/duckida/che
 
 ## hardware interface
 
+You will have to add the `pi` user to the Serial group `sudo usermod -a -G dialout pi` and reboot
+
 ## deployment
