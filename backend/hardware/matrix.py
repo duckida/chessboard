@@ -5,7 +5,7 @@ import serial
 import json
 
 class ChessboardMatrix:
-    def __init__(self.):
+    def __init__(self):
         self.ser = serial.Serial('/dev/serial0', 115200, timeout=1)
 
     def get_state(self):
