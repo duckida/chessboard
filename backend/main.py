@@ -19,6 +19,8 @@ led_strip.update()
 down_value = ""
 up_value = ""
 
+previous_ai_move = ""
+
 print("Ready")
 
 while True:
@@ -45,27 +47,29 @@ while True:
     up_value = down_value = "" # reset for next time
     print(user_move)
 
-    move_from = user_move[0:2]
-    move_to = user_move[2:4]
+    if user_move != previous_ai_move: # it's not just them moveing the AI pieces
+        move_from = user_move[0:2]
+        move_to = user_move[2:4]
 
-    led_strip.set_matrix_rgb((139,69,19), (0,0,0))
+        led_strip.set_matrix_rgb((139,69,19), (0,0,0))
 
-    led_strip.set_square_rgb(move_from, (255,255,255))
-    led_strip.set_square_rgb(move_to, (255,255,255))
-    led_strip.update()
-    sleep(0.5)
+        led_strip.set_square_rgb(move_from, (255,255,255))
+        led_strip.set_square_rgb(move_to, (255,255,255))
+        led_strip.update()
+        sleep(0.5)
 
-    requests.post(f"{BASE_URL}/sf-make-human-move", json={"move": user_move}, timeout=5) # make their move
+        requests.post(f"{BASE_URL}/sf-make-human-move", json={"move": user_move}, timeout=5) # make their move
 
-    ai_move_req = requests.post(f"{BASE_URL}/sf-play", timeout=5) # let the ai make it's move
-    ai_move = ai_move_req.text
+        ai_move_req = requests.post(f"{BASE_URL}/sf-play", timeout=5) # let the ai make it's move
+        ai_move = ai_move_req.text
+        previous_ai_move = ai_move
 
-    print(f"AI move: {ai_move}") # print
+        print(f"AI move: {ai_move}") # print
 
-    move_from = ai_move[0:2]
-    move_to = ai_move[2:4]
+        move_from = ai_move[0:2]
+        move_to = ai_move[2:4]
 
-    led_strip.set_square_rgb(move_from, (255,0,0))
-    led_strip.set_square_rgb(move_to, (0,255,0))
-    led_strip.update()
-    sleep(0.5)
+        led_strip.set_square_rgb(move_from, (255,0,0))
+        led_strip.set_square_rgb(move_to, (0,255,0))
+        led_strip.update()
+        sleep(0.5)
