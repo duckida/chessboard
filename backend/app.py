@@ -83,6 +83,7 @@ class HumanGame:
     stockfish.configure({
         "Hash": 4,          # Use 4MB of hash table
         "Threads": 1,        # Use only 1 CPU thread
+        "Use NNUE": False,
     })
     limit = chess.engine.Limit(time=0.5)
 
@@ -106,6 +107,7 @@ class StockfishGame:
     stockfish.configure({
         "Hash": 4,          # Use 4MB of hash table
         "Threads": 1,        # Use only 1 CPU thread
+        "Use NNUE": False, # disable neural networks
     })
 
     def __init__(self):
