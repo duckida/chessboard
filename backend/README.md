@@ -7,8 +7,12 @@ The API routes that create and modify games and connect to different services ar
 
 Details about API routes can be found in [API.md](https://github.com/duckida/chessboard/blob/main/backend/API.md).
 
+The backend can be deployed using systemd
+
 ## hardware interface
 
-You will have to add the `pi` user to the Serial group `sudo usermod -a -G dialout pi` and reboot
+### enabling serial
+1. Add the `pi` user to the Serial group `sudo usermod -a -G dialout pi`
+2. Run `sudo raspi-config` go to Interfaces, click Serial and say no to login shell, yes to serial port hardware
 
 ## deployment

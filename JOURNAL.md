@@ -83,6 +83,26 @@ July 16:
 - Soldered the column & rows to the Pico 
 - Tested the matrix, many squares didn't work so I had to resolder loose wires etc.
 
+July 17:
+- Got all the matrix keys to work after much testing, resoldering and alignment!
+- Laser cut a base and base spacer
+- Tried to put the NeoPixels in and failed, so made the holes bigger
+- Soldered the NeoPixels and put them in through the reed switches
+- Started testing the NeoPixels
+
+July 18: soldered & fixed some NeoPixels that didn't work
+
+July 19:
+- Got all the NeoPixels to work!
+- Deployed the frontend to Vercel and ran it `DISPLAY=:0 surf -F https://chessboard-moa.vercel.app/`
+
+July 20:
+- Got all the reed switches and NeoPixels to work
+- Hot glued the protoboards to the 3D printed chessboard
+- Hot glued the screen enclosure to this
+- Soldered Pico UART to the Pi
+- Wrote READMEs for the frontend & backend
+
 ### AI usage
 AI helped me with:
 - understanding the LiChess API and its responses
@@ -90,3 +110,5 @@ AI helped me with:
 - learning Next.js
 - help me setup the Pi desktop and framebuffer
 - Exporting the Next.js site as static HTML
+- Creating a UI to test reed switches (not shipped in the final code)
+- Using UART hardware Serial on the Pico
