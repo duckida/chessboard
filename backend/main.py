@@ -10,11 +10,11 @@ while True:
     led_strip.update()
 
     user_move = input("enter move: ")
-    requests.post(f"{BASE_URL}/sf-make-human-move", {"move": user_move}) # make their move
+    requests.post(f"{BASE_URL}/sf-make-human-move", json={"move": user_move}) # make their move
 
     ai_move = requests.post(f"{BASE_URL}/sf-play").text # let the ai make it's move
-    move_from = ai_move[0:1]
-    move_to = ai_move[2:3]
+    move_from = ai_move[0:2]
+    move_to = ai_move[2:4]
 
     led_strip.set_square_rgb(move_from, (255,0,0))
     led_strip.set_square_rgb(move_to, (0,255,0))
