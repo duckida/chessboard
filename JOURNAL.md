@@ -103,6 +103,11 @@ July 20:
 - Soldered Pico UART to the Pi
 - Wrote READMEs for the frontend & backend
 
+July 21:
+- Wrote a basic demo code to play against Stockfish
+- Switched to Stockfish 14 to minimize resource use
+- Updated the LED matrix to square mapping
+
 ### AI usage
 AI helped me with:
 - understanding the LiChess API and its responses
@@ -111,4 +116,4 @@ AI helped me with:
 - help me setup the Pi desktop and framebuffer
 - Exporting the Next.js site as static HTML
 - Creating a UI to test reed switches (not shipped in the final code)
-- Using UART hardware Serial on the Pico
+- Using UART hardware Serial on the Pico and reading this on the Pi

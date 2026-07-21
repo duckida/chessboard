@@ -7,7 +7,11 @@ The API routes that create and modify games and connect to different services ar
 
 Details about API routes can be found in [API.md](https://github.com/duckida/chessboard/blob/main/backend/API.md).
 
-The backend can be deployed using systemd
+## backend deployment instructions
+1. Install uv: `curl -LsSf https://astral.sh/uv/install.sh | sh` and restart your shell
+2. Clone this repo and enter: `git clone https://github.com/duckida/chessboard && cd chessboard`
+3. Enter the backend and install packages: `cd backend && uv sync`
+4. 
 
 ## hardware interface
 
