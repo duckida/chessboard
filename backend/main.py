@@ -20,7 +20,7 @@ down_value = ""
 up_value = ""
 
 while True:
-    while up_value == "" and down_value == "": # no piece has been moved yet
+    while up_value == "" or down_value == "": # no piece has been moved yet
         state = m.get_state() # read the matrix
 
         for y_index, y_value in enumerate(state): # for each row
