@@ -62,6 +62,8 @@ July 13:
 - Printed the end section which stores the Pi, Pico and screen
 - Worked on the backend, creating a class for Stockfish game and API routes for it
 
+![TinkerCAD design](journal_images/6.png)
+
 July 14:
 - Printed the chessboard squares
 - Soldered the display pins (messed this up so had to redo it) and NeoPixel strip to the Pi
@@ -71,10 +73,16 @@ July 14:
 - Compiled the Next.js app
 - Designed a KiCAD schematic for the full size matrix
 
+![Printing squares](journal_images/7.png)
+![Display working](journal_images/8.png)
+![Tested NeoPixel strip](journal_images/9.png)
+
 July 15:
 - Used a guillotine to cut the protoboards to size
 - Soldered the reed switches to the protoboard
 - Soldered wires for the matrix columns
+
+![All the NeoPixels fitting in the board](journal_images/10.png)
 
 July 16:
 - Soldered all diodes to the matrix
@@ -83,12 +91,18 @@ July 16:
 - Soldered the column & rows to the Pico 
 - Tested the matrix, many squares didn't work so I had to resolder loose wires etc.
 
+![Full KiCAD schematic](journal_images/11.png)
+![Testing the reed switches with a vibe-coded webapp](journal_images/12.png)
+
 July 17:
 - Got all the matrix keys to work after much testing, resoldering and alignment!
 - Laser cut a base and base spacer
 - Tried to put the NeoPixels in and failed, so made the holes bigger
 - Soldered the NeoPixels and put them in through the reed switches
 - Started testing the NeoPixels
+
+![Holes I had to cut](journal_images/13.png)
+![Soldering NeoPixels](journal_images/14.png)
 
 July 18: soldered & fixed some NeoPixels that didn't work
 
@@ -102,11 +116,17 @@ July 20:
 - Hot glued the screen enclosure to this
 - Soldered Pico UART to the Pi
 - Wrote READMEs for the frontend & backend
+- Put a paper diffuser layer on the top
+
+![All the parts in the shell](journal_images/15.png)
+![Top with the diffuser layer](journal_images/16.png)
 
 July 21:
 - Wrote a basic demo code to play against Stockfish
 - Switched to Stockfish 14 to minimize resource use
 - Updated the LED matrix to square mapping
+- Got up and down events to work with the reed switches
+- Wrote README for the project and backend
 
 ### AI usage
 AI helped me with:
@@ -117,3 +137,5 @@ AI helped me with:
 - Exporting the Next.js site as static HTML
 - Creating a UI to test reed switches (not shipped in the final code)
 - Using UART hardware Serial on the Pico and reading this on the Pi
+- Fixing systemd service order
+- General debugging
