@@ -25,6 +25,7 @@ requests.post(f"{BASE_URL}/reset-stockfish-game", timeout=1)
 print("Ready")
 
 while True:
+    previous_up = ""
     while up_value == "" or down_value == "": # no piece has been moved yet
         state = m.get_state() # read the matrix
 
@@ -34,12 +35,13 @@ while True:
                     x = LETTERS[x_index]
                     y = y_index + 1
 
-                    if x_value == 1: # a piece is here now
+                    if (x_value == 1) and (f"{x}{y}" != previous_up): # a piece is here now and its not the same square as up
                         down_value = f"{x}{y}"
                         print(f"DOWN {down_value}")
                         sleep(0.2)
                     elif x_value == 0:
                         up_value = f"{x}{y}"
+                        previous_up = up_value
                         print(f"UP {up_value}")
                         sleep(0.2)
 
