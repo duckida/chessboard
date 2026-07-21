@@ -15,13 +15,33 @@ load_dotenv()
 LICHESS_TOKEN = os.environ["LICHESS_TOKEN"]
 
 
+class StockfishEngine:
+    limit = chess.engine.Limit(time=1)
+
+    def __init__(self):
+        self.stockfish = chess.engine.SimpleEngine.popen_uci("../stockfish")
+        self.stockfish.configure({
+            "Hash": 4,          # Use 4MB of hash table
+            "Threads": 1,        # Use only 1 CPU thread
+            "Use NNUE": False, # disable neural networks
+        })
+
+    def make_move(self, board):
+        result = self.stockfish.play(board, self.limit)
+        return result
+
+    def find_best_move(self, board):
+        best_move = self.stockfish.play(board, self.limit).move
+        return best_move.uci()
+
+stockfish_engine = StockfishEngine()
+
 class Opponent:
     def __init__(self, game_id, username, elo, color):
         self.game_id = game_id
         self.username = username
         self.elo = elo
         self.color = color
-
 
 class LichessGame:
     def __init__(self):
@@ -79,42 +99,26 @@ class LichessGame:
         self.board.make_move(self.game_id, move)
 
 class HumanGame:
-    limit = chess.engine.Limit(time=0.5)
-
     def __init__(self):
         self.board = chess.Board()
-        self.stockfish = chess.engine.SimpleEngine.popen_uci("../stockfish")
-        self.stockfish.configure({
-            "Hash": 4,          # Use 4MB of hash table
-            "Threads": 1,        # Use only 1 CPU thread
-            "Use NNUE": False,
-        })
 
     def make_move(self, move):
         move_object = chess.Move.from_uci(move)
         self.board.push(move_object)
 
     def find_best_move(self):
-        best_move = self.stockfish.play(self.board, self.limit).move
-        return best_move.uci()
+        best_move = stockfish_engine.find_best_move(self.board)
+        return best_move
 
     def get_fen(self):
         return self.board.fen()
 
 class StockfishGame:
-    limit = chess.engine.Limit(time=1)
-
     def __init__(self):
         self.board = chess.Board()
-        self.stockfish = chess.engine.SimpleEngine.popen_uci("../stockfish")
-        self.stockfish.configure({
-            "Hash": 4,          # Use 4MB of hash table
-            "Threads": 1,        # Use only 1 CPU thread
-            "Use NNUE": False, # disable neural networks
-        })
 
     def make_stockfish_move(self):
-        result = self.stockfish.play(self.board, self.limit)
+        result = stockfish_engine.make_move(self.board)
         self.board.push(result.move)
         return result.move.uci()
 
@@ -184,9 +188,6 @@ def reset_stockfish_game():
     global stockfish_game
     stockfish_game = StockfishGame()
     return "200"
-
-
-
 
 
 
