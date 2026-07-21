@@ -14,7 +14,7 @@ while True:
     move_from = user_move[0:2]
     move_to = user_move[2:4]
 
-    led_strip.set_matrix_rgb((139,69,19))
+    led_strip.set_matrix_rgb((139,69,19), (0,0,0))
 
     led_strip.set_square_rgb(move_from, (255,255,255))
     led_strip.set_square_rgb(move_to, (255,255,255))
