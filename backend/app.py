@@ -79,16 +79,16 @@ class LichessGame:
         self.board.make_move(self.game_id, move)
 
 class HumanGame:
-    stockfish = chess.engine.SimpleEngine.popen_uci("../stockfish")
-    stockfish.configure({
-        "Hash": 4,          # Use 4MB of hash table
-        "Threads": 1,        # Use only 1 CPU thread
-        "Use NNUE": False,
-    })
     limit = chess.engine.Limit(time=0.5)
 
     def __init__(self):
         self.board = chess.Board()
+        self.stockfish = chess.engine.SimpleEngine.popen_uci("../stockfish")
+        self.stockfish.configure({
+            "Hash": 4,          # Use 4MB of hash table
+            "Threads": 1,        # Use only 1 CPU thread
+            "Use NNUE": False,
+        })
 
     def make_move(self, move):
         move_object = chess.Move.from_uci(move)
@@ -103,15 +103,15 @@ class HumanGame:
 
 class StockfishGame:
     limit = chess.engine.Limit(time=1)
-    stockfish = chess.engine.SimpleEngine.popen_uci("../stockfish")
-    stockfish.configure({
-        "Hash": 4,          # Use 4MB of hash table
-        "Threads": 1,        # Use only 1 CPU thread
-        "Use NNUE": False, # disable neural networks
-    })
 
     def __init__(self):
         self.board = chess.Board()
+        self.stockfish = chess.engine.SimpleEngine.popen_uci("../stockfish")
+        self.stockfish.configure({
+            "Hash": 4,          # Use 4MB of hash table
+            "Threads": 1,        # Use only 1 CPU thread
+            "Use NNUE": False, # disable neural networks
+        })
 
     def make_stockfish_move(self):
         result = self.stockfish.play(self.board, self.limit)
@@ -241,4 +241,4 @@ def return_status():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", use_reloader=False, port=5000)
