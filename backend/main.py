@@ -9,8 +9,8 @@ while True:
     led_strip.set_matrix_rgb((139,69,19))
     led_strip.update()
 
-    user_move = input("enter move")
-    requests.post(f"{BASE_URL}/sf-make-human-move", f'{"move": move}') # make their move
+    user_move = input("enter move: ")
+    requests.post(f"{BASE_URL}/sf-make-human-move", {"move": user_move}) # make their move
 
     ai_move = requests.post(f"{BASE_URL}/sf-play").text # let the ai make it's move
     move_from = ai_move[0:1]
