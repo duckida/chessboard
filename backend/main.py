@@ -38,10 +38,11 @@ while True:
                         up_value = f"{x}{y}"
                         print(f"UP {up_value}")
 
-    old_state = copy.deepcopy(state)
-    sleep(0.05)
+        old_state = copy.deepcopy(state)
+        sleep(0.05)
 
     user_move = f"{up_value}{down_value}"
+    up_value = down_value = "" # reset for next time
     print(user_move)
 
     move_from = user_move[0:2]
