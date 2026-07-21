@@ -101,7 +101,7 @@ class HumanGame:
         return self.board.fen()
 
 class StockfishGame:
-    limit = chess.engine.Limit(time=0.5)
+    limit = chess.engine.Limit(time=1)
     stockfish = chess.engine.SimpleEngine.popen_uci("../stockfish")
     stockfish.configure({
         "Hash": 4,          # Use 4MB of hash table
