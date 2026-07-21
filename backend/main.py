@@ -21,6 +21,7 @@ up_value = ""
 
 previous_ai_move = ""
 
+requests.post(f"{BASE_URL}/reset-stockfish-game", timeout=1)
 print("Ready")
 
 while True:
