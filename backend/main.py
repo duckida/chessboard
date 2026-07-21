@@ -1,17 +1,44 @@
 from hardware import leds, matrix
 import requests
 from time import sleep
+import copy
 
 BASE_URL = "http://127.0.0.1:5000"
 
+# matrix setup
+m = matrix.ChessboardMatrix()
+LETTERS = "abcdefgh"
+old_state = copy.deepcopy(m.get_state())
+
 led_strip = leds.LEDStrip(200)
 
-# initialize with a chessboard
+# initialize with a chessboard pattern
 led_strip.set_matrix_rgb((139,69,19), (0,0,0))
 led_strip.update()
 
+down_value = ""
+up_value = ""
+
 while True:
-    user_move = input("enter move: ")
+    while up_value == "" and down_value == "": # no piece has been moved yet
+        state = m.get_state() # read the matrix
+
+        for y_index, y_value in enumerate(state): # for each row
+            for x_index, x_value in enumerate(y_value): # check each switch in it
+                if x_value != old_state[y_index][x_index]: # ooh something's changed!
+                    x = LETTERS[x_index]
+                    y = y_index + 1
+
+                    if x_value == 1: # a piece is here now
+                        down_value = f"{x}{y}"
+                    elif x_value == 0:
+                        up_value = f"{x}{y}"
+
+    old_state = copy.deepcopy(state)
+    sleep(0.05)
+
+
+    user_move = f"{up_value}{down_value}"
 
     move_from = user_move[0:2]
     move_to = user_move[2:4]
