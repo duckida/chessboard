@@ -52,7 +52,7 @@ while True:
     up_value = down_value = "" # reset for next time
     print(user_move)
 
-    if user_move != previous_ai_move: # it's not just them moveing the AI pieces
+    if user_move[2:4] != previous_ai_move[2:4]: # it's not just them moveing the AI pieces
         move_from = user_move[0:2]
         move_to = user_move[2:4]
 
