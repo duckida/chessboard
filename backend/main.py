@@ -31,14 +31,16 @@ while True:
 
                     if x_value == 1: # a piece is here now
                         down_value = f"{x}{y}"
+                        print(f"DOWN {down_value}")
                     elif x_value == 0:
                         up_value = f"{x}{y}"
+                        print(f"UP {up_value}")
 
     old_state = copy.deepcopy(state)
     sleep(0.05)
 
-
     user_move = f"{up_value}{down_value}"
+    print(user_move)
 
     move_from = user_move[0:2]
     move_to = user_move[2:4]
