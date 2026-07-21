@@ -10,7 +10,7 @@ m = matrix.ChessboardMatrix()
 LETTERS = "abcdefgh"
 old_state = copy.deepcopy(m.get_state())
 
-led_strip = leds.LEDStrip(200)
+led_strip = leds.LEDStrip(150)
 
 # initialize with a chessboard pattern
 led_strip.set_matrix_rgb((139,69,19), (0,0,0))
@@ -18,6 +18,8 @@ led_strip.update()
 
 down_value = ""
 up_value = ""
+
+print("Ready")
 
 while True:
     while up_value == "" or down_value == "": # no piece has been moved yet
