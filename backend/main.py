@@ -78,3 +78,5 @@ while True:
         led_strip.set_square_rgb(move_to, (0,255,0))
         led_strip.update()
         sleep(0.5)
+    else:
+        led_strip.set_matrix_rgb((139,69,19), (0,0,0)) # remove the ai instruction step
