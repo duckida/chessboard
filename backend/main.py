@@ -5,7 +5,7 @@ from time import sleep
 BASE_URL = "http://127.0.0.1:5000"
 
 led_strip = leds.LEDStrip(200)
-led_strip.set_matrix_rgb((139,69,19))
+led_strip.set_matrix_rgb((139,69,19), (0,0,0))
 led_strip.update()
 
 while True:
