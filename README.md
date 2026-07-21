@@ -1,6 +1,8 @@
 # chessboard
 
 ## what is this?
+<img width="1920" height="1080" alt="IMG_20260721_202502" src="https://github.com/user-attachments/assets/b1a6dce3-c0ee-46c6-ae59-63fdc9586124" />
+
 An electronic chessboard to play against others online, chess engines, or others in person (and get hints)!
 
 ## why did I build it?
