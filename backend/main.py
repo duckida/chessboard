@@ -37,9 +37,11 @@ while True:
                     if x_value == 1: # a piece is here now
                         down_value = f"{x}{y}"
                         print(f"DOWN {down_value}")
+                        sleep(0.2)
                     elif x_value == 0:
                         up_value = f"{x}{y}"
                         print(f"UP {up_value}")
+                        sleep(0.2)
 
         old_state = copy.deepcopy(state)
         sleep(0.05)
