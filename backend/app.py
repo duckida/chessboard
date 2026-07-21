@@ -113,7 +113,7 @@ class StockfishGame:
 
     def make_stockfish_move(self):
         result = self.stockfish.play(self.board, self.limit)
-        self.board.push(result)
+        self.board.push(result.move)
 
     def make_human_move(self, move):
         move_object = chess.Move.from_uci(move)
