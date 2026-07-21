@@ -6,4 +6,4 @@ It reads the matrix of reed switches and outputs to the Pi over Serial (USB).
 
 You only need to copy `main.py` and `keypad_lib.py`.
 
-![Full KiCAD schematic](journal_images/11.png)
+![Full KiCAD schematic](https://raw.githubusercontent.com/duckida/chessboard/refs/heads/main/journal_images/11.png)
