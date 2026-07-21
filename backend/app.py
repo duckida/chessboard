@@ -95,7 +95,7 @@ class HumanGame:
 
     def find_best_move(self):
         best_move = self.stockfish.play(self.board, self.limit).move
-        return best_move
+        return best_move.uci
 
     def get_fen(self):
         return self.board.fen()
@@ -114,6 +114,7 @@ class StockfishGame:
     def make_stockfish_move(self):
         result = self.stockfish.play(self.board, self.limit)
         self.board.push(result.move)
+        return result.move.uci
 
     def make_human_move(self, move):
         move_object = chess.Move.from_uci(move)
@@ -145,7 +146,8 @@ def hvh_status():
 
 @app.route("/reset-hvh-game", methods=["POST"])
 def reset_hvh_game():
-    hvh_game = StockfishGame()
+    global hvh_game
+    hvh_game = HumanGame()
     return "200"
 
 
@@ -157,8 +159,8 @@ stockfish_game = StockfishGame()
 @app.route("/sf-play", methods=["POST"])
 def sf_play():
     try:
-        stockfish_game.make_stockfish_move()
-        return "200"
+        move_uci = stockfish_game.make_stockfish_move()
+        return move_uci
     except Exception as e:
         return str(e)
 
@@ -177,6 +179,7 @@ def stockfish_status():
 
 @app.route("/reset-stockfish-game", methods=["POST"])
 def reset_stockfish_game():
+    global stockfish_game
     stockfish_game = StockfishGame()
     return "200"
 
