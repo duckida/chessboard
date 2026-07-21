@@ -95,7 +95,7 @@ class HumanGame:
 
     def find_best_move(self):
         best_move = self.stockfish.play(self.board, self.limit).move
-        return best_move.uci
+        return best_move.uci()
 
     def get_fen(self):
         return self.board.fen()
@@ -114,7 +114,7 @@ class StockfishGame:
     def make_stockfish_move(self):
         result = self.stockfish.play(self.board, self.limit)
         self.board.push(result.move)
-        return result.move.uci
+        return result.move.uci()
 
     def make_human_move(self, move):
         move_object = chess.Move.from_uci(move)
