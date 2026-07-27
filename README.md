@@ -5,6 +5,8 @@
 
 An electronic chessboard to play against others online, chess engines, or others in person (and get hints)!
 
+Click [here](https://user-cdn.hackclub-assets.com/019f8627-e8d6-7e0b-9ccc-8cd9828df5a0/chessboard%20demo.mp4) for a video demo!
+
 ## why did I build it?
 I love playing chess, and one of the best ways to improve is with practice against others or a computer. However, this normally requires playing online, which is more distracting. I wanted to build a chessboard where I could play with anyone in the world or with a computer on a traditional board.
 
