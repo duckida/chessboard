@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 """
 main.py -- Chessboard hardware loop
+====================================
+
+Runs on the Raspberry Pi inside the physical chessboard.
 """
 
 from __future__ import annotations
 
 import logging
-import os
 import re
 import signal
 import sys
@@ -43,8 +45,6 @@ class Config:
     highlight_delay: float = 0.7
     guidance_delay: float = 4.0
     prompt_blink_hz: float = 1.5
-    # Options: "standard", "horizontal_flip", "vertical_flip", "rotated_180"
-    board_orientation: str = "vertical_flip"
     log_level: str = "INFO"
 
 DEFAULT_CONFIG = Config(
@@ -65,7 +65,6 @@ DEFAULT_CONFIG = Config(
     highlight_delay=0.7,
     guidance_delay=4.0,
     prompt_blink_hz=1.5,
-    board_orientation="vertical_flip",  # CHANGE THIS TO MATCH YOUR WIRING
     log_level="INFO",
 )
 
@@ -102,30 +101,25 @@ INITIAL_OCCUPANCY: Set[str] = {
     chess.square_name(sq) for sq in chess.SquareSet(chess.Board().occupied)
 }
 
-BOARD_ORIENTATION: str = DEFAULT_CONFIG.board_orientation
+# --------------------------------------------------------------------------
+# Matrix <-> chess-square coordinate mapping
+# --------------------------------------------------------------------------
 
 def square_name(y_index: int, x_index: int) -> str:
-    """Map raw matrix state[y][x] to a chess square name."""
-    if BOARD_ORIENTATION == "rotated_180":
-        y_index = 7 - y_index
-        x_index = 7 - x_index
-    elif BOARD_ORIENTATION == "horizontal_flip":
-        x_index = 7 - x_index
-    elif BOARD_ORIENTATION == "vertical_flip":
-        y_index = 7 - y_index
+    """Map raw matrix state[y][x] to a chess square name.
+
+    The physical board is wired with the raw sensor rows reversed relative
+    to the playing side (rank 1 at raw y=7, rank 8 at raw y=0). Flip only
+    the y axis so the displayed board and physical board match.
+    """
+    y_index = 7 - y_index
     return f"{LETTERS[x_index]}{y_index + 1}"
 
 def matrix_coords(square: str) -> Tuple[int, int]:
-    """Inverse: chess square name -> raw matrix (y, x)."""
+    """Inverse of square_name(): chess square name -> raw matrix (y, x)."""
     file_idx = LETTERS.index(square[0])
     rank_idx = int(square[1]) - 1
-    if BOARD_ORIENTATION == "rotated_180":
-        return 7 - rank_idx, 7 - file_idx
-    elif BOARD_ORIENTATION == "horizontal_flip":
-        return rank_idx, 7 - file_idx
-    elif BOARD_ORIENTATION == "vertical_flip":
-        return 7 - rank_idx, file_idx
-    return rank_idx, file_idx
+    return 7 - rank_idx, file_idx
 
 def occupancy_of(board: chess.Board) -> Set[str]:
     return {chess.square_name(sq) for sq in chess.SquareSet(board.occupied)}
@@ -175,7 +169,10 @@ def create_matrix(cfg: Config, log: logging.Logger):
         log.warning("SIMULATE=True: using mock matrix")
         return MockMatrix()
     if hw_matrix is None:
-        log.warning("hardware.matrix unavailable (%s); using mock", _HARDWARE_IMPORT_ERROR)
+        log.warning(
+            "hardware.matrix unavailable (%s); using mock",
+            _HARDWARE_IMPORT_ERROR,
+        )
         return MockMatrix()
     try:
         return hw_matrix.ChessboardMatrix()
@@ -188,7 +185,10 @@ def create_leds(cfg: Config, log: logging.Logger):
         log.warning("SIMULATE=True: using mock LED strip")
         return MockLEDStrip(cfg.led_brightness)
     if hw_leds is None:
-        log.warning("hardware.leds unavailable (%s); using mock", _HARDWARE_IMPORT_ERROR)
+        log.warning(
+            "hardware.leds unavailable (%s); using mock",
+            _HARDWARE_IMPORT_ERROR,
+        )
         return MockLEDStrip(cfg.led_brightness)
     try:
         return hw_leds.LEDStrip(cfg.led_brightness)
@@ -564,16 +564,8 @@ class GameLoop:
 
         self.leds.clear()
 
-    def _log_orientation(self):
-        """Print how raw matrix corners map to chess squares."""
-        self.log.info("orientation=%s corner mappings:", BOARD_ORIENTATION)
-        for y, x in [(0, 0), (0, 7), (7, 0), (7, 7)]:
-            self.log.info("  raw(%d,%d) -> %s", y, x, square_name(y, x))
-
     def run(self):
-        self.log.info("starting chessboard loop (base_url=%s, orientation=%s)",
-                      self.cfg.base_url, BOARD_ORIENTATION)
-        self._log_orientation()
+        self.log.info("starting chessboard loop (base_url=%s)", self.cfg.base_url)
         self._enter_mode(self._detect_mode())
         self.last_resync = time.time()
 
@@ -1035,34 +1027,14 @@ class GameLoop:
         self._check_game_over()
 
 # --------------------------------------------------------------------------
-# Diagnose orientation quickly without running the full game
-# --------------------------------------------------------------------------
-def diagnose(cfg: Config):
-    global BOARD_ORIENTATION
-    BOARD_ORIENTATION = cfg.board_orientation
-    log = logging.getLogger("chessboard")
-    print(f"\nTesting board_orientation = {BOARD_ORIENTATION}")
-    print("Raw matrix corner -> chess square:")
-    corners = [(0, 0), (0, 7), (7, 0), (7, 7)]
-    labels = ["top-left", "top-right", "bottom-left", "bottom-right"]
-    for (y, x), label in zip(corners, labels):
-        print(f"  {label:12s} raw({y},{x}) -> {square_name(y, x)}")
-
-# --------------------------------------------------------------------------
 # Entry point
 # --------------------------------------------------------------------------
 def main(argv=None) -> int:
     cfg = DEFAULT_CONFIG
 
-    global BOARD_ORIENTATION
-    valid_orientations = ("standard", "horizontal_flip", "vertical_flip", "rotated_180")
-    if cfg.board_orientation not in valid_orientations:
-        cfg.board_orientation = "standard"
-    BOARD_ORIENTATION = cfg.board_orientation
-
     log = setup_logging(cfg)
-    log.info("chessboard main.py starting (mode=%s, simulate=%s, orientation=%s)",
-             cfg.mode, cfg.simulate, BOARD_ORIENTATION)
+    log.info("chessboard main.py starting (mode=%s, simulate=%s)",
+             cfg.mode, cfg.simulate)
 
     matrix = create_matrix(cfg, log)
     strip = create_leds(cfg, log)
@@ -1082,9 +1054,4 @@ def main(argv=None) -> int:
     return 0
 
 if __name__ == "__main__":
-    if "--diagnose" in sys.argv:
-        # minimal setup for quick orientation check
-        logging.basicConfig(level=logging.INFO)
-        diagnose(DEFAULT_CONFIG)
-    else:
-        sys.exit(main())
+    sys.exit(main())
