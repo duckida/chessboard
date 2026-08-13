@@ -52,6 +52,7 @@ class Config:
     board_orientation: str = "rotated_180"  # "standard" or "rotated_180"
     log_level: str = "INFO"
 
+# CHANGE THE CONFIG HERE:
 DEFAULT_CONFIG = Config(
     # --- networking / API ---
     base_url="http://127.0.0.1:5000",
@@ -81,7 +82,7 @@ DEFAULT_CONFIG = Config(
     prompt_blink_hz=1.5,         # blink rate for engine/opponent prompts
 
     # --- board wiring ---
-    board_orientation="standard",  # "standard" or "rotated_180"
+    board_orientation="rotated_180",  # "standard" or "rotated_180"
     log_level="INFO",
 )
 
