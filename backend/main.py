@@ -44,7 +44,7 @@ class Config:
     guidance_delay: float = 4.0
     prompt_blink_hz: float = 1.5
     # Options: "standard", "horizontal_flip", "vertical_flip", "rotated_180"
-    board_orientation: str = "standard"
+    board_orientation: str = "vertical_flip"
     log_level: str = "INFO"
 
 DEFAULT_CONFIG = Config(
@@ -65,7 +65,7 @@ DEFAULT_CONFIG = Config(
     highlight_delay=0.7,
     guidance_delay=4.0,
     prompt_blink_hz=1.5,
-    board_orientation="standard",  # CHANGE THIS TO MATCH YOUR WIRING
+    board_orientation="vertical_flip",  # CHANGE THIS TO MATCH YOUR WIRING
     log_level="INFO",
 )
 
