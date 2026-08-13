@@ -29,7 +29,7 @@ function HVHChessboard() {
           setBestMove(response.data)
         });
 
-    }, 500); // check every 500 ms
+    }, 100); // check every 100 ms
 
     return () => clearInterval(intervalId);
   }, [gameFen]);
