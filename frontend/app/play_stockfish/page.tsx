@@ -30,13 +30,13 @@ function StockfishChessboard() {
         id: 'stockfish-board'
   };
 
-  return <Chessboard options={chessboardOptions} />;
+  return <Chessboard options={chessboardOptions}/>;
 }
 
 export default function Page() {
   return (
-    <>
-        <StockfishChessboard />
-    </>
+    <div className="w-[320px]">
+      <StockfishChessboard/>
+    </div>
   );
 }

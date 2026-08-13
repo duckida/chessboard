@@ -91,8 +91,10 @@ export default function Page() {
         <Button variant="outline" onClick={() => resetGame()}>
           Reset Game
         </Button>
-        <StatusText />
+      <StatusText />
+      <div className="w-[320px]">
         <LiChessboard />
+      </div>
     </>
   );
 }

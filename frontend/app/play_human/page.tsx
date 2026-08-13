@@ -49,8 +49,8 @@ function HVHChessboard() {
 
 export default function Page() {
   return (
-    <>
+    <div className="w-[320px]">
         <HVHChessboard />
-    </>
+    </div>
   );
 }
