@@ -49,7 +49,10 @@ class Config:
     highlight_delay: float = 0.7
     guidance_delay: float = 4.0
     prompt_blink_hz: float = 1.5
-    board_orientation: str = "rotated_180"  # "standard" or "rotated_180"
+    # "standard": sensor / board match as printed.
+    # "horizontal_flip": mirror left-right (e.g. raw sensor wired a/h reversed).
+    # "rotated_180": board physically turned around.
+    board_orientation: str = "horizontal_flip"
     log_level: str = "INFO"
 
 # CHANGE THE CONFIG HERE:
@@ -82,7 +85,9 @@ DEFAULT_CONFIG = Config(
     prompt_blink_hz=1.5,         # blink rate for engine/opponent prompts
 
     # --- board wiring ---
-    board_orientation="rotated_180",  # "standard" or "rotated_180"
+    # Default: horizontal flip because the physical board is mirrored
+    # left-to-right relative to the raw sensor coordinates.
+    board_orientation="horizontal_flip",
     log_level="INFO",
 )
 
@@ -129,6 +134,8 @@ def square_name(y_index: int, x_index: int) -> str:
     if BOARD_ORIENTATION == "rotated_180":
         y_index = 7 - y_index
         x_index = 7 - x_index
+    elif BOARD_ORIENTATION == "horizontal_flip":
+        x_index = 7 - x_index
     return f"{LETTERS[x_index]}{y_index + 1}"
 
 def matrix_coords(square: str) -> Tuple[int, int]:
@@ -137,6 +144,8 @@ def matrix_coords(square: str) -> Tuple[int, int]:
     rank_idx = int(square[1]) - 1
     if BOARD_ORIENTATION == "rotated_180":
         return 7 - rank_idx, 7 - file_idx
+    elif BOARD_ORIENTATION == "horizontal_flip":
+        return rank_idx, 7 - file_idx
     return rank_idx, file_idx
 
 def occupancy_of(board: chess.Board) -> Set[str]:
@@ -1062,7 +1071,7 @@ def main(argv=None) -> int:
     cfg = DEFAULT_CONFIG
 
     global BOARD_ORIENTATION
-    if cfg.board_orientation not in ("standard", "rotated_180"):
+    if cfg.board_orientation not in ("standard", "horizontal_flip", "rotated_180"):
         cfg.board_orientation = "standard"
     BOARD_ORIENTATION = cfg.board_orientation
 
