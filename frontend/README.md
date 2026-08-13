@@ -41,8 +41,7 @@ User=pi
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi/.Xauthority
 WorkingDirectory=/home/pi
-ExecStartPre=/bin/sh -c 'for i in $(seq 1 60); do xdpyinfo >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'
-ExecStart=/usr/bin/surf -F http://localhost/
+ExecStart=/usr/bin/xinit /usr/bin/surf -F http://localhost/ -- :0 -nocursor
 
 [Install]
 WantedBy=graphical.target
