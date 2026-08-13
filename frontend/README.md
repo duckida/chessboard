@@ -19,7 +19,8 @@ server {
         }
     }
 ```
-3. Move your compiled static website files to `/var/www/html`
+3. Make /var/www/html accessible: `chmod 777 /var/www/html`
+4. Move your compiled static website files to `/var/www/html`
 
 ## browser
 To display the page in a fullscreen kiosk on the Pi, we use the Surf browser: `DISPLAY=:0 surf -F http://localhost/`
