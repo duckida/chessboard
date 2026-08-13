@@ -51,6 +51,7 @@ Configuration (environment variables, all optional)
   ENGINE_TIMEOUT         max seconds to wait for Stockfish (default 30)
   AUTO_RESTART           "1"/"0": new game when pieces are reset (default 1)
   RESET_ON_START         "1"/"0": reset the server game on startup (default 1)
+  BOARD_ORIENTATION      "standard" | "rotated_180" (default standard)
   SIMULATE               "1" to use mock hardware (no Pi required)
   LOG_LEVEL              DEBUG|INFO|WARNING         (default INFO)
 """
@@ -113,10 +114,29 @@ INITIAL_OCCUPANCY: Set[str] = {
     chess.square_name(sq) for sq in chess.SquareSet(chess.Board().occupied)
 }
 
+# --------------------------------------------------------------------------
+# Matrix <-> chess-square coordinate mapping
+# --------------------------------------------------------------------------
+# The physical reed-switch matrix may be wired 180° from the standard
+# algebraic orientation. BOARD_ORIENTATION controls this globally.
+#   "standard"     a1 at matrix (0,0), h8 at (7,7)
+#   "rotated_180"  h8 at matrix (0,0), a1 at (7,7)
+BOARD_ORIENTATION: str = "standard"
+
 def square_name(y_index: int, x_index: int) -> str:
-    """Matches the wiring convention used by the reed-switch matrix:
-    state[y][x] -> file=LETTERS[x], rank=y+1."""
+    """state[y][x] -> chess square name, respecting BOARD_ORIENTATION."""
+    if BOARD_ORIENTATION == "rotated_180":
+        y_index = 7 - y_index
+        x_index = 7 - x_index
     return f"{LETTERS[x_index]}{y_index + 1}"
+
+def matrix_coords(square: str) -> Tuple[int, int]:
+    """Inverse of square_name(): chess square name -> (y, x) matrix coords."""
+    file_idx = LETTERS.index(square[0])
+    rank_idx = int(square[1]) - 1
+    if BOARD_ORIENTATION == "rotated_180":
+        return 7 - rank_idx, 7 - file_idx
+    return rank_idx, file_idx
 
 def occupancy_of(board: chess.Board) -> Set[str]:
     """Names of all squares that should physically hold a piece."""
@@ -144,6 +164,7 @@ class Config:
     highlight_delay: float = 0.7  # how long the white "move registered" flash stays
     guidance_delay: float = 4.0  # stable-mismatch time before guidance LEDs
     prompt_blink_hz: float = 1.5
+    board_orientation: str = "standard"
     log_level: str = "INFO"
 
 def load_config() -> Config:
@@ -178,6 +199,7 @@ def load_config() -> Config:
         prompt_blink_hz=env_float("PROMPT_BLINK_HZ", 1.5),
         mode_check_interval=env_float("MODE_CHECK_INTERVAL", 2.0),
         engine_timeout=env_float("ENGINE_TIMEOUT", 30.0),
+        board_orientation=os.environ.get("BOARD_ORIENTATION", "standard").strip().lower(),
         log_level=os.environ.get("LOG_LEVEL", "INFO").upper(),
     )
 
@@ -364,7 +386,8 @@ class DebouncedReader:
         return changed
 
     def is_occupied(self, sq: str) -> bool:
-        return bool(self.confirmed[int(sq[1]) - 1][LETTERS.index(sq[0])])
+        y, x = matrix_coords(sq)
+        return bool(self.confirmed[y][x])
 
     def occupied_squares(self) -> Set[str]:
         out = set()
@@ -684,7 +707,8 @@ class GameLoop:
 
     # ---- main loop ---------------------------------------------------------
     def run(self):
-        self.log.info("starting chessboard loop (base_url=%s)", self.cfg.base_url)
+        self.log.info("starting chessboard loop (base_url=%s, orientation=%s)",
+                      self.cfg.base_url, BOARD_ORIENTATION)
         self._enter_mode(self._detect_mode())
         self.last_resync = time.time()
 
@@ -1206,6 +1230,10 @@ def parse_args(argv=None) -> argparse.Namespace:
     parser.add_argument("--base-url", default=None)
     parser.add_argument("--no-reset", action="store_true",
                         help="don't reset the server-side game on startup")
+    parser.add_argument("--board-orientation", default=None,
+                        choices=["standard", "rotated_180"],
+                        help="how the physical matrix maps to chess squares "
+                             "(default: standard)")
     return parser.parse_args(argv)
 
 def main(argv=None) -> int:
@@ -1219,9 +1247,17 @@ def main(argv=None) -> int:
         cfg.base_url = args.base_url.rstrip("/")
     if args.no_reset:
         cfg.reset_on_start = False
+    if args.board_orientation:
+        cfg.board_orientation = args.board_orientation
+
+    global BOARD_ORIENTATION
+    if cfg.board_orientation not in ("standard", "rotated_180"):
+        cfg.board_orientation = "standard"
+    BOARD_ORIENTATION = cfg.board_orientation
 
     log = setup_logging(cfg)
-    log.info("chessboard main.py starting (mode=%s, simulate=%s)", cfg.mode, cfg.simulate)
+    log.info("chessboard main.py starting (mode=%s, simulate=%s, orientation=%s)",
+             cfg.mode, cfg.simulate, BOARD_ORIENTATION)
 
     matrix = create_matrix(cfg, log)
     strip = create_leds(cfg, log)
