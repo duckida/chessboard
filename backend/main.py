@@ -33,7 +33,7 @@ import requests
 @dataclass
 class Config:
     base_url: str = "http://127.0.0.1:5000"
-    mode: str = "auto"  # stockfish | hvh | lichess | auto
+    mode: str = "stockfish"  # stockfish | hvh | lichess | auto
     led_brightness: int = 150
     poll_interval: float = 0.03
     debounce_reads: int = 3
@@ -49,7 +49,7 @@ class Config:
     highlight_delay: float = 0.7
     guidance_delay: float = 4.0
     prompt_blink_hz: float = 1.5
-    board_orientation: str = "standard"  # "standard" or "rotated_180"
+    board_orientation: str = "rotated_180"  # "standard" or "rotated_180"
     log_level: str = "INFO"
 
 DEFAULT_CONFIG = Config(
