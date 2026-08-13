@@ -33,10 +33,10 @@ class LEDStrip:
             self.strip.setPixelColor(pixel, Color(*rgb))
 
     def set_matrix_rgb(self, rgb_white, rgb_black):
-        for pixel in range(0, self.LED_COUNT, 2):
+        for pixel in range(1, self.LED_COUNT, 2):
             self.strip.setPixelColor(pixel, Color(*rgb_white))
 
-        for pixel in range(1, self.LED_COUNT, 2):
+        for pixel in range(0, self.LED_COUNT, 2):
             self.strip.setPixelColor(pixel, Color(*rgb_black))
 
     def update(self):
