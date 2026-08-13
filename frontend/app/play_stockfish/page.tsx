@@ -20,7 +20,7 @@ function StockfishChessboard() {
         .then(function (response) {
           setGameFen(response.data);
       });
-    }, 3000); // check every 1000 ms
+    }, 500); // check every 500 ms
 
     return () => clearInterval(intervalId);
   }, [chessGame]);

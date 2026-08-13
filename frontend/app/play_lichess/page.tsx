@@ -37,7 +37,7 @@ function StatusText() {
       axios.get(`${BASE_URL}/lichess-status`).then(function (response) {
         setStatus(JSON.stringify(response.data));
       });
-    }, 1000); // check every 1000 ms
+    }, 200); // check every 200 ms
 
     return () => clearInterval(intervalId);
   }, []);
