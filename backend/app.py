@@ -196,7 +196,7 @@ lichess_game = LichessGame()
 TIME = 10
 INCREMENT = 0
 
-@app.route("/search-and-join-lichess-lichess_game", methods=["POST"])
+@app.route("/search-and-join-lichess-game", methods=["POST"])
 def search_and_join_lichess_game():
     search_thread = threading.Thread(
         target=lichess_game.search, args=(TIME, INCREMENT), daemon=True
