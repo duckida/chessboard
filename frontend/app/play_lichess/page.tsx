@@ -6,7 +6,7 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 
 // backend calling functions
-const BASE_URL = "http://127.0.0.1:5000";
+const BASE_URL = "http://chessboard.local:5000";
 
 function searchGame() {
   axios.post(`${BASE_URL}/search-and-join-lichess-game`).catch((error) => {
@@ -24,7 +24,6 @@ function resetGame() {
   axios.post(`${BASE_URL}/reset-lichess-game`).catch((error) => {
     console.error(error);
   });
-  window.location.reload();
 }
 
 // custom ui components
@@ -82,15 +81,17 @@ function LiChessboard() {
 export default function Page() {
   return (
     <>
-        <Button onClick={() => searchGame()}>
-          Search Game
-        </Button>
-        <Button onClick={() => startGame()}>
-          Start Game (once found)
-        </Button>
-        <Button variant="outline" onClick={() => resetGame()}>
-          Reset Game
-        </Button>
+        <div className="w-[320px] flex flex-col">
+          <Button onClick={() => searchGame()}>
+            Search Game
+          </Button>
+          <Button onClick={() => startGame()}>
+            Start Game (once found)
+          </Button>
+          <Button variant="outline" onClick={() => resetGame()}>
+            Reset Game
+          </Button>
+        </div>
       <StatusText />
       <div className="w-[320px]">
         <LiChessboard />
