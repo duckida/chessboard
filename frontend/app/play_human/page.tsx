@@ -4,6 +4,7 @@ import { Chess, Square } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import axios, { AxiosHeaders } from "axios";
 import { Button } from "@/components/ui/button";
+import Link from 'next/link';
 
 // backend calling functions
 const BASE_URL = "http://127.0.0.1:5000";
@@ -49,7 +50,12 @@ function HVHChessboard() {
 
 export default function Page() {
   return (
-    <div className="w-[320px]">
+    <div className="w-[320px] flex flex-col">
+        <Link href="/">
+          <Button variant="outline">
+          ← Back
+          </Button>
+        </Link>
         <HVHChessboard />
     </div>
   );

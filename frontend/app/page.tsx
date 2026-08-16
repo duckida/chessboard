@@ -8,7 +8,7 @@ import Link from 'next/link';
 export default function Page() {
   return (
     <>
-      <div className="flex flex-col gap-4 items-center p-5">
+      <div className="flex flex-col gap-4 items-center p-5 w-[300px]">
         <h1 className="font-mono font-bold text-2xl">Chessboard</h1>
 
         <Link href="/play_stockfish">

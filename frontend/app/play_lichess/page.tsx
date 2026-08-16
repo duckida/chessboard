@@ -4,6 +4,7 @@ import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
+import Link from 'next/link';
 
 // backend calling functions
 const BASE_URL = "http://chessboard.local:5000";
@@ -81,7 +82,12 @@ function LiChessboard() {
 export default function Page() {
   return (
     <>
-        <div className="w-[320px] flex flex-col">
+      <div className="w-[320px] flex flex-col">
+          <Link href="/">
+            <Button variant="outline">
+             ← Back
+            </Button>
+          </Link>
           <Button onClick={() => searchGame()}>
             Search Game
           </Button>
