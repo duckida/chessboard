@@ -139,3 +139,4 @@ AI helped me with:
 - Using UART hardware Serial on the Pico and reading this on the Pi
 - Fixing systemd service order
 - General debugging
+- The current `main.py` is written by AI, but this is after shipping to Hack Club. I aim to rewrite this completely myself in the future.
