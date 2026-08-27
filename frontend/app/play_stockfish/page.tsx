@@ -44,12 +44,12 @@ export default function Page() {
   return (
     <div className="w-[320px] flex flex-col">
       <Link href="/">
-        <Button variant="outline">
+        <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold">
          ← Back
         </Button>
       </Link>
       <StockfishChessboard />
-      <Button onClick={() => undo()}>
+      <Button onClick={() => undo()} className="w-[160px] h-[80px] text-xl font-bold">
        ↩ Undo
       </Button>
     </div>

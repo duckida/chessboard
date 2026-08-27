@@ -52,7 +52,7 @@ export default function Page() {
   return (
     <div className="w-[320px] flex flex-col">
         <Link href="/">
-          <Button variant="outline">
+          <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold">
           ← Back
           </Button>
         </Link>
