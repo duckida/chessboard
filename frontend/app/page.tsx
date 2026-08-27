@@ -1,9 +1,7 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Power } from "lucide-react"
-import Link from 'next/link';
 
 const BASE_URL = "http://127.0.0.1:5000";
 
@@ -19,23 +17,17 @@ export default function Page() {
       <div className="flex flex-col gap-4 items-center p-5 w-[320px]">
         <h1 className="font-mono font-bold text-2xl">Chessboard</h1>
 
-        <Link href="/play_stockfish">
-          <Button asChild className="w-[300px] h-[100px] bg-green-600 text-lg font-bold">
-            Play Stockfish
-            </Button>
-        </Link>
+        <Button className="w-[300px] h-[100px] bg-green-600 text-lg font-bold" onClick={() => window.location.href = "/play_stockfish"}>
+          Play Stockfish
+        </Button>
 
-        <Link href="/play_lichess">
-          <Button asChild className="w-[300px] h-[100px] bg-yellow-800 text-lg font-bold">
-            Play LiChess
-          </Button>
-        </Link>
+        <Button className="w-[300px] h-[100px] bg-yellow-800 text-lg font-bold" onClick={() => window.location.href = "/play_lichess"}>
+          Play LiChess
+        </Button>
 
-        <Link href="/play_human" >
-          <Button asChild className="w-[300px] h-[100px] bg-sky-400 text-lg font-bold">
-            Human Play
-          </Button>
-        </Link>
+        <Button className="w-[300px] h-[100px] bg-sky-400 text-lg font-bold" onClick={() => window.location.href = "/play_human"}>
+          Human Play
+        </Button>
       </div>
 
       <div>
