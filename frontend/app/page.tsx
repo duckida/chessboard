@@ -5,6 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Power } from "lucide-react"
 import Link from 'next/link';
 
+function shutdown() {
+  axios.post(`${BASE_URL}/poweroff`).catch((error) => {
+    console.error(error);
+  });
+}
+
 export default function Page() {
   return (
     <>
@@ -31,7 +37,7 @@ export default function Page() {
       </div>
 
       <div>
-        <Button className="w-[100px] h-[50px] bg-red-500 font-bold">
+        <Button className="w-[100px] h-[50px] bg-red-500 font-bold" onClick={()=>shutdown()}>
           <Power className="stroke-[2.5]"/>Shutdown
         </Button>
       </div>

@@ -253,6 +253,10 @@ def return_status():
 
     return jsonify(results)
 
+@app.route("/poweroff", methods=["POST"])
+def poweroff():
+    os.system("sudo poweroff")
+    return "200"
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", use_reloader=False, port=5000)
