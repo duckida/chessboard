@@ -4,9 +4,10 @@ import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
+import { Play, Search, RotateCcw } from "lucide-react"
 
 // backend calling functions
-const BASE_URL = "http://chessboard.local:5000";
+const BASE_URL = "http://127.0.0.1:5000";
 
 function searchGame() {
   axios.post(`${BASE_URL}/search-and-join-lichess-game`).catch((error) => {
@@ -86,18 +87,18 @@ function LiChessboard() {
 export default function Page() {
   return (
     <>
-      <div className="w-[320px] flex flex-col">
+      <div className="w-[320px] flex flex-row">
           <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold" onClick={() => leave()}>
             ← Back
           </Button>
-          <Button onClick={() => searchGame()}>
-            Search Game
+          <Button className="h-[60px] aspect-square text-2xl" onClick={() => searchGame()}>
+            <Search/>
           </Button>
-          <Button onClick={() => startGame()}>
-            Start Game (once found)
+          <Button className="h-[60px] aspect-square" onClick={() => startGame()}>
+            <Play />
           </Button>
-          <Button variant="outline" onClick={() => resetGame()}>
-            Reset Game
+          <Button className="h-[60px] aspect-square" variant="outline" onClick={() => resetGame()}>
+            <RotateCcw />
           </Button>
         </div>
       <StatusText />
