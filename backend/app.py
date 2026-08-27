@@ -128,8 +128,8 @@ class StockfishGame:
 
     def undo(self): # can only be called when both player have moved.
         # undos last 2 moves
-        self.board.push(self.board.pop())
-        self.board.push(self.board.pop())
+        self.board.pop()
+        self.board.pop()
 
     def get_fen(self):
         return self.board.fen()
