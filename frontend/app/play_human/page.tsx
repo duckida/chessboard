@@ -2,12 +2,16 @@
 import { useRef, useState, useEffect } from "react";
 import { Chess, Square } from "chess.js";
 import { Chessboard } from "react-chessboard";
-import axios, { AxiosHeaders } from "axios";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
-import Link from 'next/link';
 
 // backend calling functions
 const BASE_URL = "http://127.0.0.1:5000";
+
+async function leave() {
+  await fetch(`${BASE_URL}/reset-hvh-game`, { method: 'POST' });
+  window.location.href = '/';
+}
 
 function HVHChessboard() {
   const chessGameRef = useRef(new Chess());
@@ -51,11 +55,9 @@ function HVHChessboard() {
 export default function Page() {
   return (
     <div className="w-[320px] flex flex-col">
-        <Link href="/">
-          <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold">
-          ← Back
-          </Button>
-        </Link>
+        <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold" onClick={() => leave()}>
+        ← Back
+        </Button>
         <HVHChessboard />
     </div>
   );

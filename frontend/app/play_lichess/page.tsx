@@ -4,7 +4,6 @@ import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-import Link from 'next/link';
 
 // backend calling functions
 const BASE_URL = "http://chessboard.local:5000";
@@ -25,6 +24,11 @@ function resetGame() {
   axios.post(`${BASE_URL}/reset-lichess-game`).catch((error) => {
     console.error(error);
   });
+}
+
+async function leave() {
+  await fetch(`${BASE_URL}/reset-lichess-game`, { method: 'POST' });
+  window.location.href = '/';
 }
 
 // custom ui components
@@ -83,11 +87,9 @@ export default function Page() {
   return (
     <>
       <div className="w-[320px] flex flex-col">
-          <Link href="/">
-            <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold">
-             ← Back
-            </Button>
-          </Link>
+          <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold" onClick={() => leave()}>
+            ← Back
+          </Button>
           <Button onClick={() => searchGame()}>
             Search Game
           </Button>

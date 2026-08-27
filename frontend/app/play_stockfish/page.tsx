@@ -2,9 +2,8 @@
 import { useRef, useState, useEffect } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
-import axios, { AxiosHeaders } from "axios";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 // backend calling functions
 const BASE_URL = "http://127.0.0.1:5000";
@@ -40,14 +39,17 @@ function undo() {
   });
 }
 
+async function leave() {
+  await fetch(`${BASE_URL}/reset-stockfish-game`, { method: 'POST' });
+  window.location.href = '/';
+}
+
 export default function Page() {
   return (
     <div className="w-[320px] flex flex-col">
-      <Link href="/">
-        <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold">
-         ← Back
-        </Button>
-      </Link>
+      <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold" onClick={() => leave()}>
+        ← Back
+      </Button>
       <StockfishChessboard />
       <Button onClick={() => undo()} className="w-[160px] h-[80px] text-xl font-bold">
        ↩ Undo
