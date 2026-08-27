@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Power } from "lucide-react"
 import Link from 'next/link';
 
+const BASE_URL = "http://127.0.0.1:5000";
+
 function shutdown() {
   axios.post(`${BASE_URL}/poweroff`).catch((error) => {
     console.error(error);
