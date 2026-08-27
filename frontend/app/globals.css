@@ -131,4 +131,9 @@ body {
   html {
     @apply font-mono;
   }
+  [role="button"] {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+  }
 }
