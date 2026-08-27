@@ -34,6 +34,12 @@ function StockfishChessboard() {
   return <Chessboard options={chessboardOptions}/>;
 }
 
+function undo() {
+  axios.post(`${BASE_URL}/sf-undo`).catch((error) => {
+    console.error(error);
+  });
+}
+
 export default function Page() {
   return (
     <div className="w-[320px] flex flex-col">
@@ -42,7 +48,10 @@ export default function Page() {
          ← Back
         </Button>
       </Link>
-      <StockfishChessboard/>
+      <StockfishChessboard />
+      <Button onClick={() => undo()}>
+       ↩ Undo
+      </Button>
     </div>
   );
 }

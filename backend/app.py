@@ -16,7 +16,7 @@ LICHESS_TOKEN = os.environ["LICHESS_TOKEN"]
 
 
 class StockfishEngine:
-    limit = chess.engine.Limit(time=1)
+    limit = chess.engine.Limit(time=0.5)
 
     def __init__(self):
         self.stockfish = chess.engine.SimpleEngine.popen_uci("../stockfish")
@@ -126,6 +126,11 @@ class StockfishGame:
         move_object = chess.Move.from_uci(move)
         self.board.push(move_object)
 
+    def undo(self): # can only be called when both player have moved.
+        # undos last 2 moves
+        self.board.push(self.board.pop())
+        self.board.push(self.board.pop())
+
     def get_fen(self):
         return self.board.fen()
 
@@ -175,6 +180,14 @@ def sf_make_human_move():
     move = request.json.get("move")
     try:
         stockfish_game.make_human_move(move)
+        return "200"
+    except Exception as e:
+        return str(e)
+
+@app.route("/sf-undo", methods=["POST"])
+def sf_undo():
+    try:
+        stockfish_game.undo()
         return "200"
     except Exception as e:
         return str(e)
