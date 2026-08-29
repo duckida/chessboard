@@ -1,12 +1,12 @@
-import copy
-import os
-import threading
-
-import berserk
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import berserk
 import chess.engine
+import json
+import copy
+import os
+import threading
 
 app = Flask(__name__)
 CORS(app)
@@ -50,6 +50,7 @@ class LichessGame:
         self.board = self.client.board
         self.playing = False
         self.results = {"state": "idle"}
+        self.opponent = None
 
     def search(self, time, increment):  # time in mins, increment in seconds
         if self.results["state"] == "found":  # already found
@@ -252,6 +253,10 @@ def return_status():
             results["gamedata"][key] = results["gamedata"][key].total_seconds()
 
     return jsonify(results)
+
+@app.route("/lichess-opponent")
+def return_opponent():
+    return json.dumps(lichess_game.opponent.__dict__)
 
 @app.route("/poweroff", methods=["POST"])
 def poweroff():
