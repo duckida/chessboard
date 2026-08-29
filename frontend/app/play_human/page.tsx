@@ -4,14 +4,10 @@ import { Chess, Square } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 // backend calling functions
 const BASE_URL = "http://127.0.0.1:5000";
-
-async function leave() {
-  await fetch(`${BASE_URL}/reset-hvh-game`, { method: 'POST' });
-  window.location.href = '/';
-}
 
 function HVHChessboard() {
   const chessGameRef = useRef(new Chess());
@@ -53,6 +49,13 @@ function HVHChessboard() {
 }
 
 export default function Page() {
+  const router = useRouter();
+
+  async function leave() {
+    await fetch(`${BASE_URL}/reset-hvh-game`, { method: 'POST' });
+    router.push('/');
+  }
+
   return (
     <div className="w-[320px] flex flex-col">
         <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold" onClick={() => leave()}>

@@ -5,6 +5,7 @@ import { Chessboard } from "react-chessboard";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Play, Search, RotateCcw } from "lucide-react"
+import { useRouter } from "next/navigation";
 
 // backend calling functions
 const BASE_URL = "http://chessboard.local:5000";
@@ -25,11 +26,6 @@ function resetGame() {
   axios.post(`${BASE_URL}/reset-lichess-game`).catch((error) => {
     console.error(error);
   });
-}
-
-async function leave() {
-  await fetch(`${BASE_URL}/reset-lichess-game`, { method: 'POST' });
-  window.location.href = '/';
 }
 
 // custom ui components
@@ -66,12 +62,12 @@ function PlayerData() {
   return (
     <div className="flex flex-row items-center justify-center p-2 gap-2">
       <div className='rounded-xl w-[150px] h-[60px] border-gray-200 border-solid border bg-white p-[5px]' style={{backgroundColor: playerData[0].color}}>
-        <p className="font-bold" style={{color: playerData[0].color == "white" ? "black" : "white"}}>{playerData[0].username}</p>
+        <p className="font-bold text-lg" style={{color: playerData[0].color == "white" ? "black" : "white"}}>{playerData[0].username}</p>
         <p style={{color: playerData[0].color == "white" ? "black" : "white"}}>{playerData[0].elo}</p>
       </div>
 
       <div className='rounded-xl w-[150px] h-[60px] border-gray-200 border-solid border bg-white p-[5px]' style={{backgroundColor: playerData[1].color}}>
-        <p className="font-bold" style={{color: playerData[1].color == "white" ? "black" : "white"}}>{playerData[1].username}</p>
+        <p className="font-bold text-lg" style={{color: playerData[1].color == "white" ? "black" : "white"}}>{playerData[1].username}</p>
         <p style={{color: playerData[1].color == "white" ? "black" : "white"}}>{playerData[1].elo}</p>
       </div>
     </div>
@@ -114,6 +110,13 @@ function LiChessboard() {
 }
 
 export default function Page() {
+  const router = useRouter();
+
+  async function leave() {
+    await fetch(`${BASE_URL}/reset-lichess-game`, { method: 'POST' });
+    router.push('/')
+  }
+
   return (
     <>
       <div className="w-[320px] flex flex-row">
