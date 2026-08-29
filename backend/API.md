@@ -5,8 +5,8 @@
 `curl http://127.0.0.1:5000/lichess-status`
 
 
-### Get the opponent data
-`curl http://127.0.0.1:5000/lichess-opponent`
+### Get the player data
+`curl http://127.0.0.1:5000/lichess-players`
 
 ### Start searching for a game 
 `curl -X POST http://127.0.0.1:5000/search-and-join-lichess-game`

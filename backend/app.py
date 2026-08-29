@@ -36,9 +36,8 @@ class StockfishEngine:
 
 stockfish_engine = StockfishEngine()
 
-class Opponent:
-    def __init__(self, game_id, username, elo, color):
-        self.game_id = game_id
+class Player:
+    def __init__(self, username, elo, color):
         self.username = username
         self.elo = elo
         self.color = color
@@ -50,7 +49,8 @@ class LichessGame:
         self.board = self.client.board
         self.playing = False
         self.results = {"state": "idle"}
-        self.opponent = None
+        self.my_player = None
+        self.opponent_player = None
 
     def search(self, time, increment):  # time in mins, increment in seconds
         if self.results["state"] == "found":  # already found
@@ -64,8 +64,12 @@ class LichessGame:
                 return
 
     def update(self):
-        for state in self.board.stream_game_state(self.game_id):
-            self.results = {"state": "playing", "gamedata": state}
+        for event in self.board.stream_game_state(self.game_id):
+            if event["type"] == "gameFull":
+                my_dict = event[self.color]
+                self.my_player = Player(my_dict["name"], my_dict["rating"], self.color)
+
+            self.results = {"state": "playing", "gamedata": event}
 
     def join(self, data):
         print("joined lichess game")
@@ -81,9 +85,8 @@ class LichessGame:
                 opponent_color = "white"
 
             opponent_data = game_data["opponent"]
-            self.opponent = Opponent(
-                self.game_id,
-                opponent_data["id"],
+            self.opponent_player = Player(
+                opponent_data["username"],
                 opponent_data["rating"],
                 opponent_color,
             )
@@ -93,7 +96,8 @@ class LichessGame:
     def reset_game(self):
         self.playing = False
         self.game_id = ""
-        self.opponent = None
+        self.my_player = None
+        self.opponent_player = None
         self.results = {"state": "idle"}
 
     def make_move(self, move):
@@ -254,9 +258,9 @@ def return_status():
 
     return jsonify(results)
 
-@app.route("/lichess-opponent")
-def return_opponent():
-    return json.dumps(lichess_game.opponent.__dict__)
+@app.route("/lichess-players")
+def return_player():
+    return json.dumps([lichess_game.opponent_player.__dict__, lichess_game.my_player.__dict__])
 
 @app.route("/poweroff", methods=["POST"])
 def poweroff():
