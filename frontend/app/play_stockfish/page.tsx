@@ -55,11 +55,11 @@ export default function Page() {
 
   return (
     <div className="w-[320px] flex flex-col">
-      <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold" onClick={() => leave()}>
+      <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold" onPointerDown={() => leave()}>
         ← Back
       </Button>
       <StockfishChessboard />
-      <Button onClick={() => undo()} className="w-[160px] h-[80px] text-xl font-bold">
+      <Button onPointerDown={() => undo()} className="w-[160px] h-[80px] text-xl font-bold">
        ↩ Undo
       </Button>
     </div>

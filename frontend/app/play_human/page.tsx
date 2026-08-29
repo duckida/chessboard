@@ -58,7 +58,7 @@ export default function Page() {
 
   return (
     <div className="w-[320px] flex flex-col">
-        <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold" onClick={() => leave()}>
+        <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold" onPointerDown={() => leave()}>
         ← Back
         </Button>
         <HVHChessboard />

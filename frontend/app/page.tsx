@@ -20,21 +20,21 @@ export default function Page() {
       <div className="flex flex-col gap-4 items-center p-5 w-[320px]">
         <h1 className="font-mono font-bold text-3xl">Chessboard</h1>
 
-        <Button className="w-[300px] h-[100px] bg-green-600 text-2xl font-bold" onClick={() => router.push("/play_stockfish")}>
+        <Button className="w-[300px] h-[100px] bg-green-600 text-2xl font-bold" onPointerDown={() => router.push("/play_stockfish")}>
           Play Stockfish
         </Button>
 
-        <Button className="w-[300px] h-[100px] bg-yellow-800 text-2xl font-bold" onClick={() => router.push("/play_lichess")}>
+        <Button className="w-[300px] h-[100px] bg-yellow-800 text-2xl font-bold" onPointerDown={() => router.push("/play_lichess")}>
           Play LiChess
         </Button>
 
-        <Button className="w-[300px] h-[100px] bg-sky-400 text-2xl font-bold" onClick={() => router.push("/play_human")}>
+        <Button className="w-[300px] h-[100px] bg-sky-400 text-2xl font-bold" onPointerDown={() => router.push("/play_human")}>
           Human Play
         </Button>
       </div>
 
       <div>
-        <Button className="w-[100px] h-[50px] bg-red-500 font-bold" onClick={()=>shutdown()}>
+        <Button className="w-[100px] h-[50px] bg-red-500 font-bold" onPointerDown={()=>shutdown()}>
           <Power className="stroke-[2.5]"/>Shutdown
         </Button>
       </div>

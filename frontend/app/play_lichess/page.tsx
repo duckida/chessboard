@@ -120,16 +120,16 @@ export default function Page() {
   return (
     <>
       <div className="w-[320px] flex flex-row">
-          <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold" onClick={() => leave()}>
+          <Button variant="outline" className="w-[80px] h-[60px] text-l font-bold" onPointerDown={() => leave()}>
             ← Back
           </Button>
-          <Button className="h-[60px] aspect-square text-2xl" onClick={() => searchGame()}>
+          <Button className="h-[60px] aspect-square text-2xl" onPointerDown={() => searchGame()}>
             <Search/>
           </Button>
-          <Button className="h-[60px] aspect-square" onClick={() => startGame()}>
+          <Button className="h-[60px] aspect-square" onPointerDown={() => startGame()}>
             <Play />
           </Button>
-          <Button className="h-[60px] aspect-square" variant="outline" onClick={() => resetGame()}>
+          <Button className="h-[60px] aspect-square" variant="outline" onPointerDown={() => resetGame()}>
             <RotateCcw />
           </Button>
         </div>
