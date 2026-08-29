@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Play, Search, RotateCcw } from "lucide-react"
 
 // backend calling functions
-const BASE_URL = "http://127.0.0.1:5000";
+const BASE_URL = "http://chessboard.local:5000";
 
 function searchGame() {
   axios.post(`${BASE_URL}/search-and-join-lichess-game`).catch((error) => {
@@ -46,7 +46,36 @@ function StatusText() {
 
     return () => clearInterval(intervalId);
   }, []);
-  return <h2>{status}</h2>;
+  return <p className="text-xs">{status}</p>;
+}
+
+function PlayerData() {
+  const [playerData, setPlayerData] = useState([{"username": "unknown", "elo": 0, "color": "black"}, {"username": "unknown", "elo": 0, "color": "white"}]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      axios.get(`${BASE_URL}/lichess-players`).then(function (response) {
+        setPlayerData(response.data);
+      });
+    }, 2000); // check every 2000 ms
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+
+  return (
+    <div className="flex flex-row items-center justify-center p-2 gap-2">
+      <div className='rounded-xl w-[150px] h-[60px] border-gray-200 border-solid border bg-white p-[5px]' style={{backgroundColor: playerData[0].color}}>
+        <p className="font-bold" style={{color: playerData[0].color == "white" ? "black" : "white"}}>{playerData[0].username}</p>
+        <p style={{color: playerData[0].color == "white" ? "black" : "white"}}>{playerData[0].elo}</p>
+      </div>
+
+      <div className='rounded-xl w-[150px] h-[60px] border-gray-200 border-solid border bg-white p-[5px]' style={{backgroundColor: playerData[1].color}}>
+        <p className="font-bold" style={{color: playerData[1].color == "white" ? "black" : "white"}}>{playerData[1].username}</p>
+        <p style={{color: playerData[1].color == "white" ? "black" : "white"}}>{playerData[1].elo}</p>
+      </div>
+    </div>
+  )
 }
 
 function LiChessboard() {
@@ -105,6 +134,11 @@ export default function Page() {
       <div className="w-[320px]">
         <LiChessboard />
       </div>
+
+      <div className="w-[320px]">
+        <PlayerData />
+      </div>
+
     </>
   );
 }
