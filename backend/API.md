@@ -22,13 +22,15 @@
 `curl -X POST http://127.0.0.1:5000/reset-lichess-game`
 
 ## Human vs Human
+### Start game
+`curl -X POST http://127.0.0.1:5000/hvh-start`
 ### Make a move
 `curl -X POST http://127.0.0.1:5000/hvh-make-move -H "Content-Type: application/json" -d '{"move": "e7e6"}'`
 ### Find best move
 `curl -X POST http://127.0.0.1:5000/hvh-find-best-move`
 ### Undo 1 move
 `curl -X POST http://127.0.0.1:5000/hvh-undo`
-### Get game FEN
+### Get game status
 `curl http://127.0.0.1:5000/hvh-status`
 ### Reset game
 `curl -X POST http://127.0.0.1:5000/reset-hvh-game`

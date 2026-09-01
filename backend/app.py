@@ -106,6 +106,10 @@ class LichessGame:
 class HumanGame:
     def __init__(self):
         self.board = chess.Board()
+        self.status = {"fen": self.board.fen(), "state": "idle"}
+
+    def start(self):
+        self.status = {"fen": self.board.fen(), "state": "playing"}
 
     def make_move(self, move):
         move_object = chess.Move.from_uci(move)
@@ -114,9 +118,6 @@ class HumanGame:
     def find_best_move(self):
         best_move = stockfish_engine.find_best_move(self.board)
         return best_move
-
-    def get_fen(self):
-        return self.board.fen()
 
     def undo(self):
         # undos last 1 move
@@ -140,11 +141,13 @@ class StockfishGame:
         self.board.pop()
         self.board.pop()
 
-    def get_fen(self):
-        return self.board.fen()
-
 # Human vs human routes
 hvh_game = HumanGame()
+
+@app.route("/hvh-start", methods=["POST"])
+def hvh_start():
+    hvh_game.start()
+    return hvh_game.status
 
 @app.route("/hvh-find-best-move", methods=["POST"])
 def hvh_best_move():
@@ -168,9 +171,9 @@ def hvh_undo():
     except Exception as e:
         return str(e)
 
-@app.route("/hvh-status") # returns FEN of current hvh game board
+@app.route("/hvh-status") # returns status of current hvh game board
 def hvh_status():
-    return hvh_game.board.fen()
+    return hvh_game.status
 
 @app.route("/reset-hvh-game", methods=["POST"])
 def reset_hvh_game():

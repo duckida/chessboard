@@ -36,13 +36,13 @@ function HVHChessboard() {
       // Set the game FEN
       axios.get(`${BASE_URL}/hvh-status`)
         .then(function (response) {
-          setGameFen(response.data);
+          setGameFen(response.data.fen);
         });
 
     }, 300); // check every 300 ms
 
     return () => clearInterval(intervalId);
-  }, [gameFen]);
+  }, []);
 
   const chessboardOptions = {
         arrows: bestMove ? [{
