@@ -131,11 +131,15 @@ body {
   html {
     @apply font-mono;
   }
-  [role="button"] {
-      touch-action: none;
-      touch-action: manipulation;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
+}
+
+@layer base {
+  button,
+  [role="button"],
+  a {
+    touch-action: none !important;
+    -webkit-touch-callout: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
   }
 }

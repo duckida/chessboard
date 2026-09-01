@@ -42,7 +42,7 @@ function HVHChessboard() {
     }, 300); // check every 300 ms
 
     return () => clearInterval(intervalId);
-  }, [gameFen]);
+  }, []);
 
   const chessboardOptions = {
         arrows: bestMove ? [{
