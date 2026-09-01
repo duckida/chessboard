@@ -70,6 +70,11 @@ function HVHChessboard() {
 }
 
 export default function Page() {
+  useEffect(() => {
+      // Runs after the component mounts (i.e., on page load)
+      fetch(`${BASE_URL}/hvh-start`, { method: 'POST' });
+    }, []);
+
   const router = useRouter();
 
   async function leave() {
