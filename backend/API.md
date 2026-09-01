@@ -25,7 +25,9 @@
 ### Make a move
 `curl -X POST http://127.0.0.1:5000/hvh-make-move -H "Content-Type: application/json" -d '{"move": "e7e6"}'`
 ### Find best move
-`curl -X POST http://chessboard.local:5000/hvh-find-best-move`
+`curl -X POST http://127.0.0.1:5000/hvh-find-best-move`
+### Undo 1 move
+`curl -X POST http://127.0.0.1:5000/hvh-undo`
 ### Get game FEN
 `curl http://127.0.0.1:5000/hvh-status`
 ### Reset game
@@ -36,6 +38,8 @@
 `curl -X POST http://127.0.0.1:5000/sf-make-human-move -H "Content-Type: application/json" -d '{"move": "e7e6"}'`
 ### Tell Stockfish to make a move
 `curl -X POST http://127.0.0.1:5000/sf-play`
+### Undo both moves
+`curl -X POST http://127.0.0.1:5000/sf-undo`
 ### Get game FEN
 `curl http://127.0.0.1:5000/stockfish-status`
 ### Reset game state

@@ -118,6 +118,10 @@ class HumanGame:
     def get_fen(self):
         return self.board.fen()
 
+    def undo(self):
+        # undos last 1 move
+        self.board.pop()
+
 class StockfishGame:
     def __init__(self):
         self.board = chess.Board()
@@ -152,6 +156,14 @@ def hvh_make_move():
     move = request.json.get("move")
     try:
         hvh_game.make_move(move)
+        return "200"
+    except Exception as e:
+        return str(e)
+
+@app.route("/hvh-undo", methods=["POST"])
+def hvh_undo():
+    try:
+        hvh_game.undo()
         return "200"
     except Exception as e:
         return str(e)
