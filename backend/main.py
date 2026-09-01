@@ -28,12 +28,14 @@ Modes:
 HVH notes and server quirks this client works around:
   * /hvh-status returns JSON {"fen": ..., "state": "idle"|"playing"}; the
     client parses that (legacy bare-FEN responses are tolerated too).
-  * The reference server does NOT refresh status["fen"] when moves are
-    made, so the remote FEN is only trustworthy immediately after
-    /hvh-start or /reset-hvh-game. This loop therefore maintains its
-    own authoritative board, never rolls back from a stale server FEN,
-    and only mirrors inbound positions that are reachable by legal
-    forward moves (which works with a correctly updated server FEN).
+  * If the server never refreshes status["fen"] on make-move, the remote
+    FEN is a frozen snapshot. This loop therefore never rolls back from a
+    server FEN that hasn't *changed* between polls.
+  * A changed server FEN that sits *behind* the local board (1..4 plies)
+    is a server-side /hvh-undo: the local logical board is rewound to
+    match, so the physical board and LEDs agree again.
+  * A server FEN that is *ahead* by legal forward moves is an inbound
+    move from another board/client and is prompted red -> green.
   * On entering hvh mode the client POSTs /hvh-start so the shared
     session is visible to other clients and to auto-detection.
   * In auto mode the loop leaves hvh automatically when the server's
@@ -610,6 +612,7 @@ class GameLoop:
         self._hvh_pending_adoption: Optional[chess.Board] = None
         self._hvh_fen_history: Set[str] = set()
         self._hvh_last_state: Optional[str] = None
+        self._hvh_last_server_fen: Optional[str] = None
         self._hvh_cache: Optional[dict] = None
         self._hvh_cache_time = 0.0
 
@@ -702,12 +705,14 @@ class GameLoop:
                     self.board = chess.Board()
                 self.log.info("hvh: joined server session at %s",
                               self.board.fen().split()[0])
+                self._hvh_last_server_fen = self.board.fen()
             elif self.cfg.reset_on_start:
                 # Fresh game, and tell the server it is playing.
                 self.client.reset_hvh()
                 self.board = chess.Board()
                 self.client.hvh_start()
                 self.log.info("hvh: started a fresh server game")
+                self._hvh_last_server_fen = START_FEN
             else:
                 # Resume whatever the server board currently holds.
                 fen = (self._hvh_snapshot(force=True) or {}).get("fen")
@@ -716,6 +721,7 @@ class GameLoop:
                 except ValueError:
                     self.board = chess.Board()
                 self.client.hvh_start()
+                self._hvh_last_server_fen = self.board.fen()
             self.human_color = None
             self.last_hvh_poll = 0.0
             self._hvh_fen_history = {self.board.fen()}
@@ -753,6 +759,35 @@ class GameLoop:
     def _note_fen(self):
         if self.mode == "hvh":
             self._hvh_fen_history.add(self.board.fen())
+
+    def _plies_behind(self, target: chess.Board) -> Optional[int]:
+        """How many plies target sits behind the local board.
+
+        Returns None if target is not an ancestor of the current local
+        position (i.e. not reachable by undoing moves).
+        """
+        probe = self.board.copy()  # includes the move stack
+        for k in range(len(probe.move_stack) + 1):
+            if probe.fen() == target.fen():
+                return k
+            if not probe.move_stack:
+                break
+            probe.pop()
+        return None
+
+    def _rewind_hvh(self, target: chess.Board):
+        """Rewind the local logical board after a server-side undo."""
+        if self.board.move_stack:
+            while self.board.fen() != target.fen() and self.board.move_stack:
+                self.board.pop()
+        if self.board.fen() != target.fen():
+            self.board = target.copy(stack=False)
+        self.finder.reset()
+        self._mismatch_since = None
+        self.log.info("hvh: server undo detected; rewound local board to %s",
+                      target.fen().split()[0])
+        self._note_fen()
+        self._check_game_over()
 
     # ------------------------------------------------------------------
     # Main loop
@@ -841,7 +876,7 @@ class GameLoop:
 
     def _mirror_move(self, uci: str, pre_board: Optional[chess.Board] = None) -> bool:
         """
-        Stage an opponent move for physical execution by th player.
+        Stage an opponent move for physical execution by the player.
 
         Computes all physically-equivalent gestures (including castling:
         king directly, king dropped on the rook target, or a proper rook
@@ -851,7 +886,7 @@ class GameLoop:
         Returns True if a prompt was queued; False if the move is already
         physically present on the board (nothing to prompt).
         """
-        board_before = pre_board if pre_board is not None else self.board
+        board_before = pre_board ifpre_board is not None else self.board
         try:
             move = chess.Move.from_uci(uci)
         except ValueError:
@@ -897,7 +932,7 @@ class GameLoop:
             return False
         head = self.mirror_tasks[0]
         for from_sq in list(self.finder.lifted.keys()):
-            if (from_sq + placed_sq) in head.mach_keys:
+            if (from_sq + placed_sq) in head.match_keys:
                 self.finder.lifted.pop(from_sq, None)
                 self._complete_mirror()
                 return True
@@ -1051,9 +1086,9 @@ class GameLoop:
 
     def _resync(self):
         if self.mode == "hvh":
-            # HVH is fully handled by its own poller (with staleness
-            # guards); triggering it here is safe and keeps error paths
-            # (e.g. rejected moves) from rolling back the local board.
+            # HVH is fully handled by its own poller (with staleness and
+            # undo guards); triggering it here keeps error paths (e.g.
+            # rejected moves) from rolling back the local board.
             self._poll_hvh()
             return
         if self.mode != "stockfish":
@@ -1189,7 +1224,7 @@ class GameLoop:
         # Both players are human on this board; any legal move by either
         # side is accepted and confirmed with the white flash.
         if not self.client.hvh_make_move(uci):
-            self.log.warning("server rejected hvh move %s; resyncinguci")
+            self.log.warning("server rejected hvh move %s; resyncing", uci)
             self.leds.flash_all(DIM_RED, times=2)
             self._resync()
             return
@@ -1224,12 +1259,15 @@ class GameLoop:
 
         * If the server session goes idle while we are in hvh mode, leave
           (auto mode) or log it (forced hvh mode).
-        * A server FEN equal to our own is synced; a server FEN we have
-          already visited locally is a stale snapshot (reference server
-          quirk) and is ignored; a server position reachable by legal
-          forward moves is an inbound move from another board/client and
-          is prompted red -> green; anything else is treated as divergent
-          and adopted (with guidance overlays guiding the player).
+        * A server FEN equal to our own is synced.
+        * A (changed) server FEN behind ours by 1..4 plies is a server-side
+          undo -> rewind the local logical board (clears the yellow/blue).
+        * A changed server FEN behind by more (>4) means the shared game was          reset; keep the local game.
+        * A server FEN that never changes is a frozen snapshot from a
+          server that doesn't refresh status["fen"] on make-move -- never
+          roll back for it.
+        * A server FEN ahead by legal forward moves is an inbound move
+          from another board/client and is prompted red -> green.
         """
         snap = self._hvh_snapshot(force=True)
         if snap is None:
@@ -1273,27 +1311,30 @@ class GameLoop:
             self.log.warning("hvh server returned invalid FEN: %s", fen)
             return
 
-        if target.fen() == self.board.fen():
+        server_fen = target.fen()
+        fen_changed = server_fen != self._hvh_last_server_fen
+        self._hvh_last_server_fen = server_fen
+
+        if server_fen == self.board.fen():
             return
 
-        # Stale / behind: server snapshot is an earlier position we have
-        # already visited. The reference server never refreshes the status
-        # FEN on make-move, so this is the normal case after our own moves.
-        if target.fen() in self._hvh_fen_history:
+        # Server board is behind ours: either a server-side /hvh-undo
+        # (the FEN *changed* since the last poll) or a stale frozen
+        # snapshot from a server that never refreshes status["fen"].
+        behind = self._plies_behind(target)
+        if behind is not None:
+            if not fen_changed:
+                # Frozen snapshot (buggy server): never roll back.
+                return
+            if behind <= 4:
+                self._rewind_hvh(target)
+                return
+            self.log.info("hvh: server board is far behind local; keeping local game")
             return
 
-        # Server was reset to the initial position while we are mid-game:
-        # keep the local game instead of rolling back the board.
-        if (target.fen() == START_FEN
-                and self.board.fen() != START_FEN
-                and self.board.move_stack):
-            self.log.info("hvh: shared game was reset; keeping local game")
-            return
-
-        # Ingest new moves one ply at a time (works with a server that
-        # keeps the status FEN fresh).
+        # Server position is ahead: another board/client made a move.
         steps = 0
-        while target.fen() != self.board.fen() and steps < 6:
+        while server_fen != self.board.fen() and steps < 6:
             move = self._find_single_transition(target)
             if move is None:
                 self.log.warning("hvh: server position diverges; deferring adoption")
@@ -1395,7 +1436,7 @@ class GameLoop:
             self.log.warning("lichess stream looks stale; restarting updater")
             self.client.li_update_stream()
             self._li_stream_post_time = now
-            self._li_last_change = now
+            self._li_lastChange = now
 
         status_field = gamedata.get("status")
         if status_field and status_field not in ("started", "created"):
