@@ -114,6 +114,7 @@ class HumanGame:
     def make_move(self, move):
         move_object = chess.Move.from_uci(move)
         self.board.push(move_object)
+        self.status = {"fen": self.board.fen(), "state": "playing"}
 
     def find_best_move(self):
         best_move = stockfish_engine.find_best_move(self.board)
@@ -122,6 +123,7 @@ class HumanGame:
     def undo(self):
         # undos last 1 move
         self.board.pop()
+        self.status = {"fen": self.board.fen(), "state": "playing"}
 
 class StockfishGame:
     def __init__(self):
