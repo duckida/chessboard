@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
 // backend calling functions
-const BASE_URL = "http://chessboard.local:5000";
+const BASE_URL = "http://127.0.0.1:5000";
 
 function undo() {
   axios.post(`${BASE_URL}/hvh-undo`).catch((error) => {
