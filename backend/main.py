@@ -886,7 +886,7 @@ class GameLoop:
         Returns True if a prompt was queued; False if the move is already
         physically present on the board (nothing to prompt).
         """
-        board_before = pre_board ifpre_board is not None else self.board
+        board_before = pre_board if pre_board is not None else self.board
         try:
             move = chess.Move.from_uci(uci)
         except ValueError:
@@ -1436,7 +1436,7 @@ class GameLoop:
             self.log.warning("lichess stream looks stale; restarting updater")
             self.client.li_update_stream()
             self._li_stream_post_time = now
-            self._li_lastChange = now
+            self._li_last_change = now
 
         status_field = gamedata.get("status")
         if status_field and status_field not in ("started", "created"):
