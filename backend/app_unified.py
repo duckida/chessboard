@@ -115,6 +115,16 @@ class LichessGame:
 
         return board.fen()
 
+    def status(self):
+        results = copy.deepcopy(self.results)  # to avoid changing the original pointer
+        print(results)
+
+        if "gamedata" in results and results["gamedata"]["type"] == "gameState":
+            for key in ["binc", "winc", "wtime", "btime"]:
+                results["gamedata"][key] = results["gamedata"][key].total_seconds()
+
+        return results
+
     def reset(self):
         self.playing = False
         self.update_thread = None
@@ -218,7 +228,7 @@ def reset():
         current_game.reset()
     except Exception: pass
 
-    status["game_type"] = "none"
+    status = {"game_type": "none"}
     current_game = None
     return "200"
 
@@ -271,22 +281,16 @@ def return_players():
 def return_fen():
     return current_game.fen()
 
+# return full status (only available for LiChess)
 @app.route("/status")
 def return_status():
-    return status
+    try:
+        data = current_game.status()
+        status["data"] = data
+    except Exception:
+        status["data"] = "unavailable"
 
-@app.route("/lichess-status")
-def return_status():
-    results = copy.deepcopy(lichess_game.results)  # to avoid changing the original pointer
-    print(results)
-
-    if "gamedata" in results and results["gamedata"]["type"] == "gameState":
-        for key in ["binc", "winc", "wtime", "btime"]:
-            results["gamedata"][key] = results["gamedata"][key].total_seconds()
-
-    return jsonify(results)
-
-
+    return jsonify(status)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", use_reloader=False, port=5000)
