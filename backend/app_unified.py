@@ -113,15 +113,13 @@ class LichessGame:
 class HumanGame:
     def __init__(self):
         self.board = chess.Board()
-        self.status = {"fen": self.board.fen(), "state": "idle"}
 
     def join(self):
-        self.status = {"fen": self.board.fen(), "state": "playing"}
+        return "hvh"
 
     def make_user_move(self, move):
         move_object = chess.Move.from_uci(move)
         self.board.push(move_object)
-        self.status = {"fen": self.board.fen(), "state": "playing"}
 
     def hint(self):
         best_move = stockfish_engine.find_best_move(self.board)
@@ -130,25 +128,38 @@ class HumanGame:
     def undo(self):
         # undos last 1 move
         self.board.pop()
-        self.status = {"fen": self.board.fen(), "state": "playing"}
+
+    def fen(self):
+        return self.board.fen()
 
 class StockfishGame:
     def __init__(self):
         self.board = chess.Board()
+
+    def join(self): return "stockfish"
+
+    def make_user_move(self, move):
+        move_object = chess.Move.from_uci(move)
+        self.board.push(move_object)
 
     def make_opponent_move(self):
         result = stockfish_engine.make_move(self.board)
         self.board.push(result.move)
         return result.move.uci()
 
-    def make_user_move(self, move):
-        move_object = chess.Move.from_uci(move)
-        self.board.push(move_object)
+    def hint(self):
+        best_move = stockfish_engine.find_best_move(self.board)
+        return best_move
 
     def undo(self): # can only be called when both player have moved.
         # undos last 2 moves
         self.board.pop()
         self.board.pop()
+
+    def fen(self):
+        return self.board.fen()
+
+
 
 
 # Unified API routes
@@ -161,7 +172,7 @@ current_game = HumanGame()
 def make_user_move():
     move = request.json.get("move")
     try:
-        current_game.make_move(move)
+        current_game.make_user_move(move)
         return "200"
     except Exception as e:
         return str(e)
@@ -202,7 +213,7 @@ def undo():
     except Exception as e:
         return str(e)
 
-# hint (available in HVH only)
+# hint (available in HVH and Stockfish only)
 @app.route("/hint", methods=["POST"])
 def hint():
     move = current_game.hint()
