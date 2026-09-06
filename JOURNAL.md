@@ -128,6 +128,14 @@ July 21:
 - Got up and down events to work with the reed switches
 - Wrote README for the project and backend
 
+Then - Sep 6:
+- Used AI to create a main.py (i aim to rewrite this by hand after creating the unified API) that links the physical board with the backend
+- Added undo API route to Stockfish and an undo button to the UI
+- Cleaned up the UI and got it to fit on the screen
+- Got the human-vs-human mode to work, and added hint & undo modes
+- Added player information route and UI to the LiChess screen
+- Started work on a unified API to make interfacing easier between modes
+
 ### AI usage
 AI helped me with:
 - understanding the LiChess API and its responses
