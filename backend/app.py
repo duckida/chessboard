@@ -37,10 +37,11 @@ class StockfishEngine:
 stockfish_engine = StockfishEngine()
 
 class Player:
-    def __init__(self, username, elo, color):
+    def __init__(self, username, elo, color, initial_time=0):
         self.username = username
         self.elo = elo
         self.color = color
+        self.seconds = initial_time
 
 class LichessGame:
     def __init__(self):
@@ -49,10 +50,12 @@ class LichessGame:
         self.board = self.client.board
         self.playing = False
         self.results = {"state": "idle"}
+        self.initial_time = 0
         self.my_player = None
         self.opponent_player = None
 
     def search(self, time, increment):  # time in mins, increment in seconds
+        self.initial_time = time * 60
         if self.results["state"] == "found":  # already found
             return  # leave
 
@@ -67,7 +70,20 @@ class LichessGame:
         for event in self.board.stream_game_state(self.game_id):
             if event["type"] == "gameFull":
                 my_dict = event[self.color]
-                self.my_player = Player(my_dict["name"], my_dict["rating"], self.color)
+                self.my_player = Player(my_dict["name"], my_dict["rating"], self.color, self.initial_time)
+
+            if event["type"] == "gameState":
+
+                white_time = int(event["wtime"])
+                black_time = int(event["btime"])
+
+                if self.my_player.color == "white":
+                    self.my_player.seconds = white_time
+                    self.opponent_player.seconds = black_time
+
+                elif self.my_player.color == "black":
+                    self.my_player.seconds = black_time
+                    self.opponent_player.seconds = white_time
 
             self.results = {"state": "playing", "gamedata": event}
 
@@ -89,6 +105,7 @@ class LichessGame:
                 opponent_data["username"],
                 opponent_data["rating"],
                 opponent_color,
+                self.initial_time
             )
 
             self.results = {"state": "found", "lichess_gameid": self.game_id}
