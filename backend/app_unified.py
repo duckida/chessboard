@@ -99,16 +99,29 @@ class LichessGame:
             self.update_thread = threading.Thread(target=self.update, daemon=True)
             self.update_thread.start()
 
-    def reset_game(self):
+        return "lichess"
+
+    def make_user_move(self, move):
+        self.board.make_move(self.game_id, move)
+
+    def fen(self):
+        board = chess.Board()
+
+        if self.results.get("gamedata", {}).get("type", {}) == "gameState":
+            moves = self.results.get("gamedata", {}).get("moves", "")
+            moves = moves.split()
+            for move in moves:
+                board.push(chess.Move.from_uci(move))
+
+        return board.fen()
+
+    def reset(self):
         self.playing = False
         self.update_thread = None
         self.game_id = ""
         self.my_player = None
         self.opponent_player = None
         self.results = {"state": "idle"}
-
-    def make_user_move(self, move):
-        self.board.make_move(self.game_id, move)
 
 class HumanGame:
     def __init__(self):
@@ -160,10 +173,8 @@ class StockfishGame:
         return self.board.fen()
 
 
-
-
 # Unified API routes
-status = {}
+status = {"game_type": "none"}
 current_game = HumanGame()
 
 ## POST (actionable) routes
@@ -177,7 +188,7 @@ def make_user_move():
     except Exception as e:
         return str(e)
 
-# make opponent move
+# make opponent move (only for Stockfish)
 @app.route("/make-opponent-move", methods=["POST"])
 def make_opponent_move():
     try:
@@ -201,6 +212,13 @@ def join():
 @app.route("/reset", methods=["POST"])
 def reset():
     global current_game
+
+    # some games need a reset properly
+    try:
+        current_game.reset()
+    except Exception: pass
+
+    status["game_type"] = "none"
     current_game = None
     return "200"
 
@@ -253,6 +271,7 @@ def return_players():
 def return_fen():
     return current_game.fen()
 
+@app.route("/status")
 def return_status():
     return status
 
