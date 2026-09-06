@@ -52,6 +52,7 @@ class LichessGame:
         self.results = {"state": "idle"}
         self.my_player = None
         self.opponent_player = None
+        self.update_thread = None
 
     def search(self, time, increment):  # time in mins, increment in seconds
         if self.results["state"] == "found":  # already found
@@ -94,8 +95,13 @@ class LichessGame:
 
             self.results = {"state": "found", "lichess_gameid": self.game_id}
 
+            # start thread
+            self.update_thread = threading.Thread(target=self.update, daemon=True)
+            self.update_thread.start()
+
     def reset_game(self):
         self.playing = False
+        self.update_thread = None
         self.game_id = ""
         self.my_player = None
         self.opponent_player = None
@@ -172,8 +178,10 @@ def make_opponent_move():
 # join the game
 @app.route("/join", methods=["POST"])
 def join():
+    global status
     try:
-        current_game.join()
+        game_type = current_game.join()
+        status["game_type"] = game_type
         return "200"
     except Exception as e:
         return str(e)
@@ -203,44 +211,39 @@ def hint():
     except Exception as e:
         return str(e)
 
-
-# LiChess routes
-lichess_game = LichessGame()
+# search (only available in LiChess)
 TIME = 10
 INCREMENT = 0
-
-@app.route("/search-and-join-lichess-game", methods=["POST"])
-def search_and_join_lichess_game():
-    search_thread = threading.Thread(
-        target=lichess_game.search, args=(TIME, INCREMENT), daemon=True
-    )
-    search_thread.start()
-    return "success"
-
-
-@app.route("/reset-lichess-game", methods=["POST"])
-def reset_lichess_game():
-    lichess_game.reset_game()
-    return "success"
-
-
-@app.route("/update-lichess-game", methods=["POST"])
-def update_lichess_game():
-    lichess_game_thread = threading.Thread(target=lichess_game.update, daemon=True)
-    lichess_game_thread.start()
-    return "success"
-
-
-@app.route("/li-make-move", methods=["POST"])
-def li_make_human_move():
-    move = request.json.get("move")
-
+@app.route("/search", methods=["POST"])
+def search():
     try:
-        lichess_game.make_move(move)
-        return "success"
+        search_thread = threading.Thread(
+            target=current_game.search, args=(TIME, INCREMENT), daemon=True
+        )
+        search_thread.start()
+        return "200"
     except Exception as e:
-        return f"error {e}"
+        return str(e)
 
+# shutdown the Pi
+@app.route("/poweroff", methods=["POST"])
+def poweroff():
+    os.system("sudo poweroff")
+    return "200"
+
+## GET routes (information)
+# get player details
+@app.route("/players")
+def return_players():
+    return json.dumps([current_game.opponent_player.__dict__, current_game.user_player.__dict__])
+
+# return fen
+@app.route("/fen")
+def return_fen():
+    return current_game.fen()
+
+def return_status():
+    return status
 
 @app.route("/lichess-status")
 def return_status():
@@ -253,14 +256,7 @@ def return_status():
 
     return jsonify(results)
 
-@app.route("/lichess-players")
-def return_player():
-    return json.dumps([lichess_game.opponent_player.__dict__, lichess_game.my_player.__dict__])
 
-@app.route("/poweroff", methods=["POST"])
-def poweroff():
-    os.system("sudo poweroff")
-    return "200"
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", use_reloader=False, port=5000)
