@@ -1,7 +1,8 @@
-# chessboard
+<img width="1920"  alt="Screenshot 2026-09-19 at 4 45 12 PM" src="https://github.com/user-attachments/assets/22a3d40b-065a-4ade-a29d-3c556892cc9e" />
+
 
 ## what is this?
-<img width="1920" height="1080" alt="IMG_20260721_202502" src="https://github.com/user-attachments/assets/b1a6dce3-c0ee-46c6-ae59-63fdc9586124" />
+<img height="200" alt="IMG_20260721_202502" src="https://github.com/user-attachments/assets/b1a6dce3-c0ee-46c6-ae59-63fdc9586124" />
 
 An electronic chessboard to play against others online, chess engines, or others in person (and get hints)!
 
