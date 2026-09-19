@@ -26,6 +26,7 @@ So far, only playing against the chess engine works, with more features coming s
 A bill of materials can be found in BOM.csv.
 
 ## my build journey
+![Hackatime Badge](https://hackatime-badge.hackclub.com/U0AF7QR9J77/chessboard)
 Throughout the project, I kept a journal at [JOURNAL.md](https://github.com/duckida/chessboard/blob/main/JOURNAL.md)!
 
 AI usage is also declared in JOURNAL.md.
