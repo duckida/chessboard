@@ -118,7 +118,9 @@ July 20:
 - Wrote READMEs for the frontend & backend
 - Put a paper diffuser layer on the top
 
-![All the parts in the shell](journal_images/15.jpg)
+<img width="488" height="418" alt="All the parts in the shell" src="https://github.com/user-attachments/assets/1a4c9187-b951-4fab-b047-fd2cf18c6d15" />
+
+
 ![Top with the diffuser layer](journal_images/16.jpg)
 
 July 21:
