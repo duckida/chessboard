@@ -21,8 +21,6 @@ Reed switches are read by a Raspberry Pi Pico and data is transmitted to the mai
 ## how to set up
 Follow the instructions in each folder (backend, frontend, cad and pico_matrix_scan)'s README to deploy each module!
 
-So far, only playing against the chess engine works, with more features coming soon!
-
 A bill of materials can be found in BOM.csv.
 
 ## my build journey
