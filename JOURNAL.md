@@ -118,8 +118,8 @@ July 20:
 - Wrote READMEs for the frontend & backend
 - Put a paper diffuser layer on the top
 
-![All the parts in the shell](journal_images/15.png)
-![Top with the diffuser layer](journal_images/16.png)
+![All the parts in the shell](journal_images/15.jpg)
+![Top with the diffuser layer](journal_images/16.jpg)
 
 July 21:
 - Wrote a basic demo code to play against Stockfish
